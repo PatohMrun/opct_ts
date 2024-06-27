@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+body{
+  @apply bg-gray-200
+}
+
+.nav-button {
+  @apply bg-secondary text-black font-bold p-1 mx-1 rounded-md text-sm
+}
+
+.active{
+  @apply text-secondary
+}
+
+.navlinks{
+  @apply hover:text-secondary w-full text-center hover:bg-darkPrimary h-10 flex justify-center items-center
+}
+
+input{
+  @apply px-2 py-1 text-gray-900
+}
+
