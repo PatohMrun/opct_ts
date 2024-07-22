@@ -17,7 +17,7 @@ const SideNav = () => {
   ];
 
   return (
-    <nav className={`fixed left-0 top-0 h-screen bg-gray-800 text-white transition-all duration-300 ease-in-out ${isExpanded ? 'w-64' : 'w-16'} md:relative`}>
+    <nav className={`fixed left-0 top-0 h-screen bg-gray-800 text-white transition-all duration-300 ease-in-out ${isExpanded ? 'w-56 md:relative' : 'w-12 relative'} `}>
       <div className="flex h-16 items-center justify-between px-4">
         <button
           onClick={() => setIsExpanded(!isExpanded)}
