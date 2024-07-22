@@ -22,7 +22,7 @@ export default function AdminLayout({
             <SideNav />
           </div>
           <section className="flex flex-col flex-1 transition-all duration-300 ease-in-out">
-            <div className="min-h-[80vh] pl-20 pr-14">{children}</div>
+            <div className="min-h-[80vh] pl-20 pr-10">{children}</div>
             <footer className="p-4 w-[100%] shadow mt-auto">
               <p className="text-center text-gray-600">© 2024 OPCT Admin. All rights reserved.</p>
             </footer>
