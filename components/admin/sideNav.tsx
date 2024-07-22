@@ -17,7 +17,7 @@ const SideNav = () => {
   ];
 
   return (
-    <nav className={`fixed left-0 top-0 h-screen bg-gray-800 text-white transition-all duration-300 ease-in-out ${isExpanded ? 'w-56 md:relative' : 'w-12 relative'} `}>
+    <nav className={`fixed left-0 top-0 h-[100vh] bg-primary text-white transition-all duration-300 ease-in-out ${isExpanded ? 'w-56' : 'w-12'} md:relative`}>
       <div className="flex h-16 items-center justify-between px-4">
         <button
           onClick={() => setIsExpanded(!isExpanded)}
@@ -31,7 +31,7 @@ const SideNav = () => {
           <li key={item.name}>
             <Link href={item.path} 
                   className={`flex items-center px-4 py-2 transition-colors duration-200 ${
-                    pathname === item.path ? 'bg-gray-700' : 'hover:bg-gray-700'
+                    pathname === item.path ? 'bg-blue-950' : 'hover:bg-blue-900'
                   }`}>
               <item.icon className="text-xl" />
               {isExpanded && (

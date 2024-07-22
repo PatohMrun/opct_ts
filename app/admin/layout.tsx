@@ -17,12 +17,13 @@ export default function AdminLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex min-h-screen bg-green-300">
-          <SideNav />
-          <section className="flex flex-col flex-1 transition-all duration-300">
-            <header className="text-center bg-blue-600 text-gray-600 p-4">this is the header</header>
-            <div className="min-h-[80vh] px-2 bg-yellow-300">{children}</div>
-            <footer className="p-4 bg-red-400 w-[100%] shadow mt-auto">
+        <div className="flex min-h-screen">
+          <div className="fixed">
+            <SideNav />
+          </div>
+          <section className="flex flex-col flex-1 transition-all duration-300 ease-in-out">
+            <div className="min-h-[80vh] pl-14 pr-14">{children}</div>
+            <footer className="p-4 w-[100%] shadow mt-auto">
               <p className="text-center text-gray-600">© 2024 OPCT Admin. All rights reserved.</p>
             </footer>
           </section>
