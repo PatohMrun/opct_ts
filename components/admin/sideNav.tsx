@@ -3,18 +3,25 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FiHome, FiFolder, FiSearch, FiSettings, FiMenu } from 'react-icons/fi';
+import { AiOutlineDashboard, AiOutlineLogout } from "react-icons/ai";  
+import { FiMenu } from 'react-icons/fi';
+import { CiViewList } from "react-icons/ci";
+import { LuMessageSquare } from "react-icons/lu";
 
 const SideNav = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const pathname = usePathname();
 
   const navItems = [
-    { icon: FiHome, name: 'Home', path: '/admin' },
-    { icon: FiFolder, name: 'Projects', path: '/projects' },
-    { icon: FiSearch, name: 'Search', path: '/search' },
-    { icon: FiSettings, name: 'Settings', path: '/settings' },
+    { icon: AiOutlineDashboard, name: 'Dashboard', path: '/admin' },
+    { icon: CiViewList, name: 'Applications', path: '/admin/applications' },
+    { icon: LuMessageSquare, name: 'Messages', path: '/admin/messages' },
   ];
+
+  const handleLogout = () => {
+    // Implement your logout logic here
+    console.log('Logout clicked');
+  };
 
   return (
     <nav className={`fixed left-0 top-0 h-[100vh] bg-primary text-white transition-all duration-300 ease-in-out ${isExpanded ? 'w-56' : 'w-12'} md:relative`}>
@@ -40,6 +47,17 @@ const SideNav = () => {
             </Link>
           </li>
         ))}
+        <li>
+          <button
+            onClick={handleLogout}
+            className={`flex w-full items-center px-4 py-2 transition-colors duration-200 hover:bg-blue-900`}
+          >
+            <AiOutlineLogout className="text-xl" />
+            {isExpanded && (
+              <span className="ml-4 transition-opacity duration-200">Log Out</span>
+            )}
+          </button>
+        </li>
       </ul>
     </nav>
   );
