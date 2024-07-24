@@ -1,18 +1,21 @@
 "use client";
+
 import Link from "next/link";
 import React, { useState } from "react";
-import { IoEye } from "react-icons/io5";
-import { IoEyeOff } from "react-icons/io5";
+import { IoEye, IoEyeOff } from "react-icons/io5";
+import { useRouter } from 'next/navigation';
 
 const Register = () => {
-  const [idNo, setIdNo] = useState("");
+  const [nationalId, setNationalId] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [error, setError] = useState<string>("");
+  const router = useRouter();
 
-  const handleIdNoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIdNo(event.target.value);
+  const handleNationalIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNationalId(event.target.value);
   };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,15 +26,38 @@ const Register = () => {
     setConfirmPassword(event.target.value);
   };
 
-  const handleRegisterSubmit = (event: React.FormEvent) => {
+  const handleRegisterSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const formData = {
-      idNo,
-      password,
-      confirmPassword,
-    };
-    console.log(formData);
-    // Here, you can add your logic to handle the form submission
+    setError("");
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ nationalId, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Registration failed');
+      }
+
+      // Registration successful
+      router.push('/login');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
+    }
   };
 
   const toggleShowPassword = () => {
@@ -48,12 +74,13 @@ const Register = () => {
         onSubmit={handleRegisterSubmit}
         className="flex flex-col gap-2 mx-auto bg-primary p-4 my-4 rounded-xl border-t-4 border-secondary shadow-xl shadow-gray-500"
       >
+        {error && <p className="text-red-500 text-sm">{error}</p>}
         <label htmlFor="ID number">National ID No:</label>
         <input
-          type="number"
+          type="text"
           placeholder="ID Number"
-          value={idNo}
-          onChange={handleIdNoChange}
+          value={nationalId}
+          onChange={handleNationalIdChange}
           required
         />
         <label htmlFor="password">Password:</label>
@@ -70,7 +97,7 @@ const Register = () => {
             className="absolute right-0 top-1/2 transform -translate-y-1/2"
             onClick={toggleShowPassword}
           >
-            { showPassword ? <span className="mx-8 text-gray-500"><IoEyeOff /></span> : <span className="mx-8 text-gray-500"><IoEye /></span>}
+            {showPassword ? <span className="mx-8 text-gray-500"><IoEyeOff /></span> : <span className="mx-8 text-gray-500"><IoEye /></span>}
           </button>
         </div>
         <label htmlFor=" Repeat password">Repeat Password:</label>
@@ -87,7 +114,7 @@ const Register = () => {
             className="absolute right-0 top-1/2 transform -translate-y-1/2"
             onClick={toggleShowConfirmPassword}
           >
-            { showPassword ? <span className="mx-8 text-gray-500"><IoEyeOff /></span> : <span className="mx-8 text-gray-500"><IoEye /></span>}
+            {showConfirmPassword ? <span className="mx-8 text-gray-500"><IoEyeOff /></span> : <span className="mx-8 text-gray-500"><IoEye /></span>}
           </button>
         </div>
         <input

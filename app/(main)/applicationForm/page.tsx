@@ -1,4 +1,6 @@
 "use client"
+// import prisma client
+import { PrismaClient } from '@prisma/client';
 import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import FormSection from '@/components/formSection';
 
@@ -13,57 +15,57 @@ interface Dependent {
 
 const ApplicationForm: React.FC = () => {
   const [firstName, setFirstName] = useState<string>('');
-const [middleName, setMiddleName] = useState<string>('');
-const [lastName, setLastName] = useState<string>('');
-const [gender, setGender] = useState<string>('');
-const [dob, setDob] = useState<string>('');
-const [nationalId, setNationalId] = useState<string>('');
-const [kra, setKra] = useState<string>('');
-const [marital, setMarital] = useState<string>('');
-const [email, setEmail] = useState<string>('');
-const [phone, setPhone] = useState<string>('');
+  const [middleName, setMiddleName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [gender, setGender] = useState<string>('');
+  const [dob, setDob] = useState<string>('');
+  const [nationalId, setNationalId] = useState<string>('');
+  const [kra, setKra] = useState<string>('');
+  const [marital, setMarital] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [phone, setPhone] = useState<string>('');
 
-const [address, setAddress] = useState<string>('');
-const [county, setCounty] = useState<string>('');
-const [subCounty, setSubCounty] = useState<string>('');
-const [constituency, setConstituency] = useState<string>('');
-const [ward, setWard] = useState<string>('');
-const [location, setLocation] = useState<string>('');
-const [subLocation, setSubLocation] = useState<string>('');
-const [Village, setVillage] = useState<string>('');
+  const [address, setAddress] = useState<string>('');
+  const [county, setCounty] = useState<string>('');
+  const [subCounty, setSubCounty] = useState<string>('');
+  const [constituency, setConstituency] = useState<string>('');
+  const [ward, setWard] = useState<string>('');
+  const [location, setLocation] = useState<string>('');
+  const [subLocation, setSubLocation] = useState<string>('');
+  const [Village, setVillage] = useState<string>('');
 
-const [income, setIncome] = useState<string>('');
-const [employment, setEmployment] = useState<string>('');
-const [assistance, setAssistance] = useState<string>('');
-const [illness, setIllness] = useState<string>('');
-const [disabled, setDisabled] = useState<string>('');
+  const [income, setIncome] = useState<string>('');
+  const [employment, setEmployment] = useState<string>('');
+  const [assistance, setAssistance] = useState<string>('');
+  const [illness, setIllness] = useState<string>('');
+  const [disabled, setDisabled] = useState<string>('');
 
-const [kinFirstName, setKinFirstName] = useState<string>('');
-const [kinMiddleName, setKinMiddleName] = useState<string>('');
-const [kinLastName, setKinLastName] = useState<string>('');
-const [kinRelationship, setKinRelationship] = useState<string>('');
-const [kinEmail, setKinEmail] = useState<string>('');
-const [kinPhone, setKinPhone] = useState<string>('');
+  const [kinFirstName, setKinFirstName] = useState<string>('');
+  const [kinMiddleName, setKinMiddleName] = useState<string>('');
+  const [kinLastName, setKinLastName] = useState<string>('');
+  const [kinRelationship, setKinRelationship] = useState<string>('');
+  const [kinEmail, setKinEmail] = useState<string>('');
+  const [kinPhone, setKinPhone] = useState<string>('');
 
-const [bankName, setBankName] = useState<string>('');
-const [bankAccount, setBankAccount] = useState<string>('');
+  const [bankName, setBankName] = useState<string>('');
+  const [bankAccount, setBankAccount] = useState<string>('');
 
-const [payeeFirstName, setPayeeFirstName] = useState<string>('');
-const [payeeMiddleName, setPayeeMiddleName] = useState<string>('');
-const [payeeLastName, setPayeeLastName] = useState<string>('');
-const [payeeBankName, setPayeeBankName] = useState<string>('');
-const [payeeBankAccount, setPayeeBankAccount] = useState<string>('');
+  const [payeeFirstName, setPayeeFirstName] = useState<string>('');
+  const [payeeMiddleName, setPayeeMiddleName] = useState<string>('');
+  const [payeeLastName, setPayeeLastName] = useState<string>('');
+  const [payeeBankName, setPayeeBankName] = useState<string>('');
+  const [payeeBankAccount, setPayeeBankAccount] = useState<string>('');
 
-const [dependent, setDependent] = useState<Dependent>({
-  dependentFirstName: '',
-  dependentMiddleName: '',
-  dependentLastName: '',
-  dependentGender: '',
-  dependentDob: '',
-  dependentRelationship: '',
-});
+  const [dependent, setDependent] = useState<Dependent>({
+    dependentFirstName: '',
+    dependentMiddleName: '',
+    dependentLastName: '',
+    dependentGender: '',
+    dependentDob: '',
+    dependentRelationship: '',
+  });
 
-const [dependents, setDependents] = useState<Dependent[]>([]);
+  const [dependents, setDependents] = useState<Dependent[]>([]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -94,43 +96,7 @@ const [dependents, setDependents] = useState<Dependent[]>([]);
 
   const handleFormSubmit = (e: FormEvent) => {
     e.preventDefault();
-    console.log(firstName);
-    console.log(middleName);
-    console.log(lastName);
-    console.log(gender);
-    console.log(dob);
-    console.log(nationalId);
-    console.log(kra);
-    console.log(marital);
-    console.log(email);
-    console.log(phone);
-    console.log(address);
-    console.log(county);
-    console.log(subCounty);
-    console.log(constituency);
-    console.log(ward);
-    console.log(location);
-    console.log(subLocation);
-    console.log(Village);
-    console.log(income);
-    console.log(employment);
-    console.log(assistance);
-    console.log(illness);
-    console.log(disabled);
-    console.log(kinFirstName);
-    console.log(kinMiddleName);
-    console.log(kinLastName);
-    console.log(kinRelationship);
-    console.log(kinEmail);
-    console.log(kinPhone);
-    console.log(bankName);
-    console.log(bankAccount);
-    console.log(payeeFirstName);
-    console.log(payeeMiddleName);
-    console.log(payeeLastName);
-    console.log(payeeBankName);
-    console.log(payeeBankAccount);
-    console.log(dependents);
+    
   };
 
   useEffect(() => {

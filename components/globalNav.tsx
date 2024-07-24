@@ -1,6 +1,7 @@
 "use client"
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
+import { logout } from "../utils/auth";
 import Link from "next/link"
 import Image from "next/image"
 import { IoMenu } from "react-icons/io5";
@@ -46,11 +47,19 @@ const Navbar = () => {
         };
     }, [isOpen]);
 
+    const handleLogout = async () => {
+        await logout();
+        // Redirect to login page or home page
+        router.push('/login');
+      };
+      
 
+    const userDataString = sessionStorage.getItem('userData');
+    const userData = userDataString ? JSON.parse(userDataString) : null;
     
 
     return ( 
-    <nav className="font-poppins bg-secondary flex justify-between items-center gap-8 h-12 z-30">
+    <nav className="font-poppins bg-primary flex justify-between items-center gap-8 h-12 z-30">
         {/* OPCT logo */}
         <div className="mx-2 sm:mx-4 flex items-center">
             <Image src={"/images/OPCT.png"} alt="OPCT Logo" width={30} height={30}/>
@@ -59,16 +68,23 @@ const Navbar = () => {
 
         {/* Navlinks */}
         <div className="hidden sm:flex sm:gap-6 text-white">
-            <Link href="/" className={`hover:text-secondary ${pathname === "/" ? "active" : "" }`}>Home</Link>
-            <Link href="/about" className={`hover:text-secondary ${pathname === "/about" ? "active" : "" }`}>About&nbsp;Us</Link>
+            <Link href="/home" className={`hover:text-secondary ${pathname === "/home" ? "active" : "" }`}>Home</Link>
+            <Link href="/messages" className={`hover:text-secondary ${pathname === "/messages" ? "active" : "" }`}>Messages</Link>
+            <Link href="/about" className={`hover:text-secondary ${pathname === "/about" ? "active" : "" }`}>About</Link>
             <Link href="/faqs" className={`hover:text-secondary ${pathname === "/faqs" ? "active" : "" }`}>FAQs</Link>
         </div>
 
         {/* Action buttons*/}
         <div className="flex items-center">
-            <div className="flex gap-1 sm:mx-2">
-            <button className="nav-button">Log&nbsp;in</button>
-            <button className="nav-button" onClick={()=>{router.push("/register")}} >Register</button>
+            <div className="flex gap-1 items-center sm:mx-2 ">
+            <div className="text-green-200 font-semibold">Welcome,                {
+                    sessionStorage.getItem('userData')
+                    ? JSON.parse(sessionStorage.getItem('userData')!).firstName
+                    : 'Guest'
+                }
+            </div>
+
+            <button className="nav-button" onClick={handleLogout} >Log Out</button>
             </div>
 
             {/* Mobile menu toggle icon */}
@@ -88,8 +104,9 @@ const Navbar = () => {
             } absolute top-12 left-0 w-full flex-col sm:hidden bg-primary mt-0 pt-4 pb-2 items-center z-10`}
         >
             <div ref={menuRef} className="flex flex-col text-white w-[95%] bg-darkPrimary items-center rounded-xl">
-                <Link onClick={()=>{setIsOpen(false)}} href="/" className={`navlinks ${pathname === "/" ? "active" : "" }`}>Home</Link>
-                <Link onClick={()=>{setIsOpen(false)}} href="/about" className={`navlinks ${pathname === "/about" ? "active" : "" }`}>About&nbsp;Us</Link>
+                <Link onClick={()=>{setIsOpen(false)}} href="/home" className={`navlinks ${pathname === "/home" ? "active" : "" }`}>Home</Link>
+                <Link onClick={()=>{setIsOpen(false)}} href="/messages" className={`navlinks ${pathname === "/messages" ? "active" : "" }`}>Messages</Link>
+                <Link onClick={()=>{setIsOpen(false)}} href="/about" className={`navlinks ${pathname === "/about" ? "active" : "" }`}>About</Link>
                 <Link onClick={()=>{setIsOpen(false)}} href="/faqs" className={`navlinks ${pathname === "/faqs" ? "active" : "" }`}>FAQs</Link>
             </div>
         </div>
