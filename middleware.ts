@@ -9,6 +9,7 @@ export function middleware(request: NextRequest) {
   
   if (!token && !publicPaths.includes(request.nextUrl.pathname)) {
     // Redirect to login page if there's no token and the path is not public
+    console.log(token)
     return NextResponse.redirect(new URL('/login', request.url));
   }
   

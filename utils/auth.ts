@@ -3,7 +3,10 @@ import { getCookie, setCookie, deleteCookie } from 'cookies-next';
 export interface User {
   id: string;
   nationalId: string;
-  // Add any other user fields you want to include
+  firstName?: string;
+  middleName?: string;
+  lastName?: string;
+  kraPin?: string;
 }
 
 export interface LoginResult {
@@ -17,22 +20,19 @@ export const login = async (nationalId: string, password: string): Promise<Login
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ nationalId, password }),
-      credentials: 'include', // This is important for including cookies
+      credentials: 'include',
     });
-
     if (!response.ok) {
       const errorData: { message: string } = await response.json();
       throw new Error(errorData.message || 'Login failed');
     }
-
     const data: LoginResult = await response.json();
-    
-    // We can store the user info in a cookie for easy access.
+
+    // Store the user info in a cookie
     setCookie('user', JSON.stringify(data.user), {
       maxAge: 86400, // 1 day
       path: '/',
     });
-
     return data;
   } catch (error) {
     console.error('Login error:', error);
@@ -46,7 +46,6 @@ export const logout = async (): Promise<void> => {
       method: 'POST',
       credentials: 'include',
     });
-
     if (response.ok) {
       deleteCookie('auth_token');
       deleteCookie('user');
@@ -62,12 +61,17 @@ export const logout = async (): Promise<void> => {
 
 export const getUser = (): User | null => {
   const userStr = getCookie('user');
-  return userStr ? JSON.parse(userStr as string) as User : null;
+  if (!userStr) return null;
+  try {
+    return JSON.parse(userStr as string) as User;
+  } catch (error) {
+    console.error('Error parsing user data:', error);
+    return null;
+  }
 };
 
 export const isLoggedIn = (): boolean => {
   const token = getCookie('auth_token');
-  console.log("auth_token cookie valueeeeeeee:", token);
   return !!token;
 };
 

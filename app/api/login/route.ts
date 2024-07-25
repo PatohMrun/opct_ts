@@ -59,19 +59,28 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
 
-    response.headers.set('X-User-Data', JSON.stringify(userData));
-
     response.cookies.set({
       name: 'auth_token',
       value: token,
-      httpOnly: false, // Change to false if you need to access it client-side
+      httpOnly: false, // httpOnly for auth token
       secure: process.env.NODE_ENV !== 'development',
-      sameSite: 'lax', // Change to 'lax' if you're having cross-domain issues
+      sameSite: 'lax',
       maxAge: 86400, // 1 day
       path: '/',
-      domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'yourdomain.com', // Adjust as needed
+      domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'yourdomain.com',
     });
-    
+
+    response.cookies.set({
+      name: 'user',
+      value: JSON.stringify(userData),
+      httpOnly: false, // not httpOnly to be accessible from client-side
+      secure: process.env.NODE_ENV !== 'development',
+      sameSite: 'lax',
+      maxAge: 86400, // 1 day
+      path: '/',
+      domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'yourdomain.com',
+    });
+
     return response;
 
   } catch (error: unknown) {

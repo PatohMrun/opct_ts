@@ -1,19 +1,23 @@
+//app/applicationForm/page.tsx
 "use client"
-// import prisma client
-import { PrismaClient } from '@prisma/client';
 import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import FormSection from '@/components/formSection';
+import { useRouter } from 'next/navigation';
+import { getUser } from '@/utils/auth'; 
 
 interface Dependent {
-    dependentFirstName: string;
-    dependentMiddleName: string;
-    dependentLastName: string;
-    dependentGender: string;
-    dependentDob: string;
-    dependentRelationship: string;
-  }
+  dependentFirstName: string;
+  dependentMiddleName: string;
+  dependentLastName: string;
+  dependentGender: string;
+  dependentDob: string;
+  dependentRelationship: string;
+}
 
 const ApplicationForm: React.FC = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [firstName, setFirstName] = useState<string>('');
   const [middleName, setMiddleName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
@@ -94,14 +98,134 @@ const ApplicationForm: React.FC = () => {
     setDependents(newDependents);
   };
 
-  const handleFormSubmit = (e: FormEvent) => {
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = getUser();
+      if (!user) {
+        router.push('/login');
+        return;
+      }
+      
+      try {
+        const response = await fetch(`/api/applicationForm?nationalId=${user.nationalId}`);
+        if (!response.ok) {
+          console.log('tyuiyuiusdewyretyuifrfwtrrwtyrwrucdffhdufefniedfjeiejeu');
+          throw new Error('Failed to fetch user data');
+        }
+        const data = await response.json();
+        const { userData } = data;
+        console.log('tyuiyuiusdewyretyuifrfwtrrwtyrwrucdffhdufefniedfjeiejeu');
+
+        // Prefill the form with government record data
+        setNationalId(userData.nationalId);
+        setFirstName(userData.governmentRecord.firstName);
+        setMiddleName(userData.governmentRecord.middleName || '');
+        setLastName(userData.governmentRecord.lastName);
+        setGender(userData.governmentRecord.gender);
+        setDob(new Date(userData.governmentRecord.dob).toISOString().split('T')[0]);
+        setKra(userData.governmentRecord.kraPin || '');
+
+        // Prefill with user data if available
+        setEmail(userData.email || '');
+        setPhone(userData.phone || '');
+        setMarital(userData.maritalStatus || '');
+        setEmployment(userData.employmentStatus || '');
+        setIllness(userData.chronicIllness ? 'yes' : 'no');
+        setDisabled(userData.disabled ? 'yes' : 'no');
+        setIncome(userData.sourceOfIncome || '');
+        setAssistance(userData.otherAssistance || '');
+        setAddress(userData.address || '');
+        setCounty(userData.county || '');
+        setSubCounty(userData.subCounty || '');
+        setConstituency(userData.constituency || '');
+        setWard(userData.ward || '');
+        setVillage(userData.village || '');
+
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        setError('Failed to load user data. Please try again.');
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+  
+  const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setError(null);
     
+    const formData = {
+      nationalId,
+      firstName,
+      middleName,
+      lastName,
+      gender,
+      dob,
+      kra,
+      marital,
+      email,
+      phone,
+      address,
+      county,
+      subCounty,
+      constituency,
+      ward,
+      location,
+      subLocation,
+      Village,
+      income,
+      employment,
+      assistance,
+      illness,
+      disabled,
+      kinFirstName,
+      kinMiddleName,
+      kinLastName,
+      kinRelationship,
+      kinEmail,
+      kinPhone,
+      bankName,
+      bankAccount,
+      payeeFirstName,
+      payeeMiddleName,
+      payeeLastName,
+      payeeBankName,
+      payeeBankAccount,
+      dependents,
+    };
+
+    try {
+      const response = await fetch('/api/submit-application', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit application');
+      }
+
+      const result = await response.json();
+      console.log('Application submitted successfully:', result);
+      router.push('/home');
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      setError('Failed to submit application. Please try again.');
+    }
   };
 
-  useEffect(() => {
-    console.log(dependents);
-  }, [dependents]);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+ 
 
   return (
     <form className="max-w-3xl mx-auto p-4">

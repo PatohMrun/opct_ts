@@ -31,7 +31,7 @@ const Login: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ nationalId, password }),
-        credentials: 'include', // This is important for including cookies
+        credentials: 'include',
       });
 
       if (!response.ok) {
@@ -39,14 +39,10 @@ const Login: React.FC = () => {
         throw new Error(errorData.message || 'Login failed');
       }
 
-      // Login successful
       const data = await response.json();
-      // Store user data in session storage
       sessionStorage.setItem('userData', JSON.stringify(data.user));
-      // Redirect to dashboard or home page
       router.push('/home');
-      
-      
+
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message);
