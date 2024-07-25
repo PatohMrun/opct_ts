@@ -50,7 +50,7 @@ const Navbar = () => {
     const handleLogout = async () => {
         await logout();
         // Redirect to login page or home page
-        router.push('/login');
+        router.push('/');
       };
       
 

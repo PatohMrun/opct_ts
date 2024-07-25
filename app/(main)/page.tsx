@@ -1,10 +1,18 @@
+'use client'
+import { useRouter } from "next/navigation";
 import Hero from "@/components/hero";
 import Image from "next/image";
 
 export default function Home() {
+  const router = useRouter();
+
+  const handleRegistration = () => {
+    router.push("/register");
+  };
+
   return (
     <main className="">
-      <Hero photo={"/images/hero.png"} alt={"hero image"} head={"OLDER PERSONS CASH TRANSFER SYSTEM"} desc={"\"Empowering Elders, Securing Futures\""} buttonName={"Register Now"}/>
+      <Hero photo={"/images/hero.png"} alt={"hero image"} head={"OLDER PERSONS CASH TRANSFER SYSTEM"} desc={"\"Empowering Elders, Securing Futures\""} buttonName={"Register Now"} onButtonClick={handleRegistration}/>
 
       <section className="mx-auto my-4 px-4 bg-white flex flex-col-reverse md:flex-row items-center rounded-2xl w-[90vw]">
         <div className="w-full md:w-[70%]  px-4 my-2 font-poppins">

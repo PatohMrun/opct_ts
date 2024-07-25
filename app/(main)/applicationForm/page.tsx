@@ -197,7 +197,7 @@ const ApplicationForm: React.FC = () => {
     };
 
     try {
-      const response = await fetch('/api/submit-application', {
+      const response = await fetch('/api/applicationForm', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
