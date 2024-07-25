@@ -7,11 +7,13 @@ export interface User {
   middleName?: string;
   lastName?: string;
   kraPin?: string;
+  role: string;
 }
 
 export interface LoginResult {
   message: string;
   user: User;
+  redirect: string;
 }
 
 export const login = async (nationalId: string, password: string): Promise<LoginResult | null> => {
@@ -22,10 +24,12 @@ export const login = async (nationalId: string, password: string): Promise<Login
       body: JSON.stringify({ nationalId, password }),
       credentials: 'include',
     });
+
     if (!response.ok) {
       const errorData: { message: string } = await response.json();
       throw new Error(errorData.message || 'Login failed');
     }
+
     const data: LoginResult = await response.json();
 
     // Store the user info in a cookie
@@ -33,6 +37,7 @@ export const login = async (nationalId: string, password: string): Promise<Login
       maxAge: 86400, // 1 day
       path: '/',
     });
+
     return data;
   } catch (error) {
     console.error('Login error:', error);
@@ -49,6 +54,7 @@ export const logout = async (): Promise<void> => {
     if (response.ok) {
       deleteCookie('auth_token');
       deleteCookie('user');
+      deleteCookie('user_role');
       sessionStorage.removeItem('userData');
     } else {
       const errorData = await response.json();
@@ -77,4 +83,9 @@ export const isLoggedIn = (): boolean => {
 
 export const getToken = (): string | null => {
   return getCookie('auth_token') as string | null;
+};
+
+export const isAdmin = (): boolean => {
+  const user = getUser();
+  return user?.role === 'ADMIN';
 };

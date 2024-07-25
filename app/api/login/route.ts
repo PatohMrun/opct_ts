@@ -16,7 +16,6 @@ function generateToken(length: number = 32): string {
 export async function POST(request: NextRequest) {
   try {
     const { nationalId, password } = await request.json();
-
     const user = await prisma.user.findUnique({
       where: { nationalId },
     });
@@ -30,7 +29,6 @@ export async function POST(request: NextRequest) {
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
-
     if (!isPasswordValid) {
       return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 });
     }
@@ -49,40 +47,50 @@ export async function POST(request: NextRequest) {
       middleName: governmentRecord?.middleName,
       lastName: governmentRecord?.lastName,
       kraPin: governmentRecord?.kraPin,
+      role: user.role, // Include the user's role
     };
 
     const response = NextResponse.json(
       {
         message: 'Login successful',
         user: userData,
+        redirect: user.role === 'ADMIN' ? '/admin' : '/home',
       },
       { status: 200 }
     );
 
+    // Set cookies
     response.cookies.set({
       name: 'auth_token',
       value: token,
-      httpOnly: false, // httpOnly for auth token
+      httpOnly: false,
       secure: process.env.NODE_ENV !== 'development',
       sameSite: 'lax',
       maxAge: 86400, // 1 day
       path: '/',
-      domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'yourdomain.com',
+    });
+
+    response.cookies.set({
+      name: 'user_role',
+      value: user.role,
+      httpOnly: false,
+      secure: process.env.NODE_ENV !== 'development',
+      sameSite: 'lax',
+      maxAge: 86400, // 1 day
+      path: '/',
     });
 
     response.cookies.set({
       name: 'user',
       value: JSON.stringify(userData),
-      httpOnly: false, // not httpOnly to be accessible from client-side
+      httpOnly: false,
       secure: process.env.NODE_ENV !== 'development',
       sameSite: 'lax',
       maxAge: 86400, // 1 day
       path: '/',
-      domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'yourdomain.com',
     });
 
     return response;
-
   } catch (error: unknown) {
     console.error('Login error:', error);
     if (error instanceof Error) {

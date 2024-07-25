@@ -34,6 +34,7 @@ model User {
   password       String
   email          String?   @unique
   phone          String?
+  role           Role      @default(USER)
   maritalStatus  MaritalStatus
   employmentStatus EmploymentStatus
   chronicIllness Boolean
@@ -114,20 +115,10 @@ model Dependent {
 model Message {
   id             Int       @id @default(autoincrement())
   userId         Int
-  adminId        Int?
   content        String
   createdAt      DateTime  @default(now())
   isAdminReply   Boolean   @default(false)
   user           User      @relation(fields: [userId], references: [id])
-  admin          Admin?    @relation(fields: [adminId], references: [id])
-}
-
-model Admin {
-  id             Int       @id @default(autoincrement())
-  username       String    @unique
-  password       String
-  email          String    @unique
-  messages       Message[]
 }
 
 model Carousel {
@@ -159,4 +150,9 @@ enum ApplicationStatus {
   Pending
   Approved
   Rejected
+}
+
+enum Role {
+  USER
+  ADMIN
 }

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import React, { useState, FormEvent } from "react";
+import { login } from "../../../utils/auth";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import { useRouter } from 'next/navigation';
 
@@ -23,7 +24,7 @@ const Login: React.FC = () => {
   const handleLoginSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError("");
-
+  
     try {
       const response = await fetch('/api/login', {
         method: 'POST',
@@ -33,16 +34,23 @@ const Login: React.FC = () => {
         body: JSON.stringify({ nationalId, password }),
         credentials: 'include',
       });
-
+  
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Login failed');
       }
-
+  
       const data = await response.json();
       sessionStorage.setItem('userData', JSON.stringify(data.user));
-      router.push('/home');
-
+      
+      // Use the redirect URL from the server response
+      if (data.redirect) {
+        router.push(data.redirect);
+      } else {
+        // Fallback to /home if no redirect is provided
+        router.push('/home');
+      }
+  
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message);
