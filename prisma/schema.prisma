@@ -11,52 +11,53 @@ datasource db {
 }
 
 model GovernmentRecord {
-  nationalId     String    @id @db.VarChar(10)
-  birthCertNo    String    @db.VarChar(15)
-  dob            DateTime
-  firstName      String    @db.VarChar(20)
-  middleName     String?   @db.VarChar(20)
-  lastName       String    @db.VarChar(20)
-  gender         Gender
-  districtOfBirth String   @db.VarChar(20)
-  district       String    @db.VarChar(20)
-  division       String    @db.VarChar(20)
-  location       String    @db.VarChar(20)
-  sublocation    String    @db.VarChar(20)
-  kraPin         String?   @db.VarChar(20)
-  deathCertNo    String?   @db.VarChar(20)
-  user           User?
+  nationalId       String    @id @db.VarChar(10)
+  birthCertNo      String    @db.VarChar(15)
+  dob              DateTime
+  firstName        String    @db.VarChar(20)
+  middleName       String?   @db.VarChar(20)
+  lastName         String    @db.VarChar(20)
+  gender           Gender
+  districtOfBirth  String    @db.VarChar(20)
+  district         String    @db.VarChar(20)
+  division         String    @db.VarChar(20)
+  location         String    @db.VarChar(20)
+  sublocation      String    @db.VarChar(20)
+  kraPin           String?   @db.VarChar(20)
+  deathCertNo      String?   @db.VarChar(20)
+  deathDate        DateTime? // New field
+  user             User?
 }
 
 model User {
-  id             Int       @id @default(autoincrement())
-  nationalId     String    @unique
-  password       String
-  email          String?   @unique
-  phone          String?
-  role           Role      @default(USER)
-  maritalStatus  MaritalStatus
-  employmentStatus EmploymentStatus
-  chronicIllness Boolean
-  disabled       Boolean
-  sourceOfIncome String?
-  otherAssistance String?
-  address        String?
-  county         String
-  subCounty      String
-  constituency   String
-  ward           String
-  village        String
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  governmentRecord GovernmentRecord @relation(fields: [nationalId], references: [nationalId])
-  application    Application?
-  nextOfKin      NextOfKin?
-  bankDetails    BankDetails?
-  alternatePayee AlternatePayee?
-  dependents     Dependent[]
-  messages       Message[]
-  token          String?
+  id                Int       @id @default(autoincrement())
+  nationalId        String    @unique
+  password          String
+  email             String?   @unique
+  phone             String?
+  role              Role      @default(USER)
+  maritalStatus     MaritalStatus
+  employmentStatus  EmploymentStatus
+  chronicIllness    Boolean
+  disabled          Boolean
+  sourceOfIncome    String?
+  otherAssistance   String?
+  address           String?
+  county            String
+  subCounty         String
+  constituency      String
+  ward              String
+  village           String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  governmentRecord  GovernmentRecord @relation(fields: [nationalId], references: [nationalId])
+  application       Application?
+  nextOfKin         NextOfKin?
+  bankDetails       BankDetails?
+  alternatePayee    AlternatePayee?
+  dependents        Dependent[]
+  messages          Message[]
+  token             String?
 }
 
 model Application {
@@ -66,6 +67,8 @@ model Application {
   submittedAt    DateTime  @default(now())
   verifiedAt     DateTime?
   approvedAt     DateTime?
+  rejectedAt     DateTime? // New field
+  isRemoved      Boolean   @default(false) // New field
   user           User      @relation(fields: [userId], references: [id])
 }
 
