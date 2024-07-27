@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
   } catch (error: unknown) {
     console.error('Login error:', error);
     if (error instanceof Error) {
-      return NextResponse.json({ message: error.message }, { status: 500 });
+      return NextResponse.json({ message: "Internal server error, sorry!" }, { status: 500 });
     } else {
       return NextResponse.json({ message: 'An unexpected error occurred' }, { status: 500 });
     }
