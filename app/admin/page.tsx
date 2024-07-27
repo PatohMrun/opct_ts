@@ -1,8 +1,9 @@
-import { ApplicationStatus, PrismaClient } from '@prisma/client';
-import Applications from '../../components/admin/applications';
-import Dashboard from '../../components/admin/dashboard';
+import { ApplicationStatus, PrismaClient } from "@prisma/client";
+import Applications from "../../components/admin/applications";
+import Dashboard from "../../components/admin/dashboard";
+import prisma from "@/utils/prisma";
 
-const prisma = new PrismaClient();
+export const dynamic = "force-dynamic";
 
 async function getApplicationData() {
   const currentYear = new Date().getFullYear();
@@ -21,19 +22,19 @@ async function getApplicationData() {
     },
   });
 
-  const applicationData = applications.map(app => ({
+  const applicationData = applications.map((app) => ({
     id: app.id,
     firstName: app.user.governmentRecord.firstName,
-    middleName: app.user.governmentRecord.middleName || '',
+    middleName: app.user.governmentRecord.middleName || "",
     lastName: app.user.governmentRecord.lastName,
     gender: app.user.governmentRecord.gender,
-    dob: app.user.governmentRecord.dob.toISOString().split('T')[0],
+    dob: app.user.governmentRecord.dob.toISOString().split("T")[0],
     nationalId: app.user.nationalId,
-    kra: app.user.governmentRecord.kraPin || '',
+    kra: app.user.governmentRecord.kraPin || "",
     marital: app.user.maritalStatus,
-    email: app.user.email || '',
-    phone: app.user.phone || '',
-    address: app.user.address || '',
+    email: app.user.email || "",
+    phone: app.user.phone || "",
+    address: app.user.address || "",
     county: app.user.county,
     subCounty: app.user.subCounty,
     constituency: app.user.constituency,
@@ -41,41 +42,45 @@ async function getApplicationData() {
     location: app.user.governmentRecord.location,
     subLocation: app.user.governmentRecord.sublocation,
     village: app.user.village,
-    income: app.user.sourceOfIncome || '',
+    income: app.user.sourceOfIncome || "",
     employment: app.user.employmentStatus,
-    assistance: app.user.otherAssistance || '',
-    illness: app.user.chronicIllness ? 'Yes' : 'No',
-    disabled: app.user.disabled ? 'Yes' : 'No',
-    kinFirstName: app.user.nextOfKin?.firstName || '',
-    kinMiddleName: app.user.nextOfKin?.middleName || '',
-    kinLastName: app.user.nextOfKin?.lastName || '',
-    kinRelationship: app.user.nextOfKin?.relationship || '',
-    kinEmail: app.user.nextOfKin?.email || '',
-    kinPhone: app.user.nextOfKin?.phone || '',
-    bankName: app.user.bankDetails?.bankName || '',
-    bankAccount: app.user.bankDetails?.accountNumber || '',
-    payeeFirstName: app.user.alternatePayee?.firstName || '',
-    payeeMiddleName: app.user.alternatePayee?.middleName || '',
-    payeeLastName: app.user.alternatePayee?.lastName || '',
-    payeeBankName: app.user.alternatePayee?.bankName || '',
-    payeeBankAccount: app.user.alternatePayee?.accountNumber || '',
-    dependents: app.user.dependents.map(dep => ({
+    assistance: app.user.otherAssistance || "",
+    illness: app.user.chronicIllness ? "Yes" : "No",
+    disabled: app.user.disabled ? "Yes" : "No",
+    kinFirstName: app.user.nextOfKin?.firstName || "",
+    kinMiddleName: app.user.nextOfKin?.middleName || "",
+    kinLastName: app.user.nextOfKin?.lastName || "",
+    kinRelationship: app.user.nextOfKin?.relationship || "",
+    kinEmail: app.user.nextOfKin?.email || "",
+    kinPhone: app.user.nextOfKin?.phone || "",
+    bankName: app.user.bankDetails?.bankName || "",
+    bankAccount: app.user.bankDetails?.accountNumber || "",
+    payeeFirstName: app.user.alternatePayee?.firstName || "",
+    payeeMiddleName: app.user.alternatePayee?.middleName || "",
+    payeeLastName: app.user.alternatePayee?.lastName || "",
+    payeeBankName: app.user.alternatePayee?.bankName || "",
+    payeeBankAccount: app.user.alternatePayee?.accountNumber || "",
+    dependents: app.user.dependents.map((dep) => ({
       dependentFirstName: dep.firstName,
-      dependentMiddleName: dep.middleName || '',
+      dependentMiddleName: dep.middleName || "",
       dependentLastName: dep.lastName,
       dependentGender: dep.gender,
-      dependentDob: dep.dob.toISOString().split('T')[0],
+      dependentDob: dep.dob.toISOString().split("T")[0],
       dependentRelationship: dep.relationship,
     })),
-    status: app.status as 'Pending' | 'Approved' | 'Rejected',
+    status: app.status as "Pending" | "Approved" | "Rejected",
     isDeceased: !!app.user.governmentRecord.deathCertNo,
   }));
 
-  const pendingApprovals = applications.filter(app => app.status === 'Pending' as ApplicationStatus).length;
-  const approvedApplicants = applications.filter(app => app.status === 'Pending' as ApplicationStatus).length;
+  const pendingApprovals = applications.filter(
+    (app) => app.status === ("Pending" as ApplicationStatus)
+  ).length;
+  const approvedApplicants = applications.filter(
+    (app) => app.status === ("Pending" as ApplicationStatus)
+  ).length;
 
   const annualApplicantTrendData = await prisma.application.groupBy({
-    by: ['submittedAt'],
+    by: ["submittedAt"],
     _count: {
       id: true,
     },
@@ -84,12 +89,13 @@ async function getApplicationData() {
   const trendData = Array.from({ length: 5 }, (_, i) => {
     const year = currentYear - i;
     const newApplicants = annualApplicantTrendData
-      .filter(data => new Date(data.submittedAt).getFullYear() === year)
+      .filter((data) => new Date(data.submittedAt).getFullYear() === year)
       .reduce((sum, data) => sum + data._count.id, 0);
 
     const removedApplicants = applications.filter(
-      app => app.user.governmentRecord.deathCertNo &&
-              new Date(app.user.governmentRecord.deathCertNo).getFullYear() === year
+      (app) =>
+        app.user.governmentRecord.deathCertNo &&
+        new Date(app.user.governmentRecord.deathCertNo).getFullYear() === year
     ).length;
 
     return { year, newApplicants, removedApplicants };
@@ -104,7 +110,12 @@ async function getApplicationData() {
 }
 
 export default async function ApplicationDashboard() {
-  const { applicationData, pendingApprovals, approvedApplicants, annualApplicantTrendData } = await getApplicationData();
+  const {
+    applicationData,
+    pendingApprovals,
+    approvedApplicants,
+    annualApplicantTrendData,
+  } = await getApplicationData();
 
   return (
     <div>
