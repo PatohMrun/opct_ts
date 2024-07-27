@@ -13,18 +13,39 @@ export async function GET(request: Request) {
   const userId = searchParams.get("userId");
 
   if (!userId) {
-    return Response.json(
-      { error: "Missing userId", success: false },
+    return new Response(
+      JSON.stringify({ error: "Missing userId", success: false }),
       { status: 400 }
     );
   }
 
+  // Fetch the user's role
+  const user = await prisma.user.findUnique({
+    where: { id: parseInt(userId) },
+    select: { role: true },
+  });
+
+  if (!user) {
+    return new Response(
+      JSON.stringify({ error: "User not found", success: false }),
+      { status: 404 }
+    );
+  }
+
+  const isAdmin = user.role === "ADMIN";
+
+  // Construct the query based on the user's role
   const messages: Message[] = await Promise.all(
     (
       await prisma.message.findMany({
-        where: {
-          receiverId: parseInt(userId),
-        },
+        where: isAdmin
+          ? { receiverId: parseInt(userId) }
+          : {
+              OR: [
+                { receiverId: parseInt(userId) },
+                { senderId: parseInt(userId) },
+              ],
+            },
         include: {
           sender: true,
         },
@@ -38,10 +59,13 @@ export async function GET(request: Request) {
       senderId: message.senderId,
     }))
   );
-  
+
   console.log(messages);
 
-  return Response.json({ messages, success: true });
+  return new Response(
+    JSON.stringify({ messages, success: true }),
+    { status: 200 }
+  );
 }
 
 async function getUserName(nationalId: string) {
