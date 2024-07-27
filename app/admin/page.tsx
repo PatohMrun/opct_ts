@@ -76,8 +76,10 @@ async function getApplicationData() {
     (app) => app.status === ("Pending" as ApplicationStatus)
   ).length;
   const approvedApplicants = applications.filter(
-    (app) => app.status === ("Pending" as ApplicationStatus)
+    (app) => app.status === ("Approved" as ApplicationStatus)
   ).length;
+
+  console.log(approvedApplicants, pendingApprovals);
 
   const annualApplicantTrendData = await prisma.application.groupBy({
     by: ["submittedAt"],
