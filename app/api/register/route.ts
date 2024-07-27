@@ -1,10 +1,9 @@
 // File: app/api/register/route.ts
 
-import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs';
-
-const prisma = new PrismaClient();
+import { NextRequest, NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
+import prisma from "@/utils/prisma";
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,7 +15,10 @@ export async function POST(request: NextRequest) {
     });
 
     if (!governmentRecord) {
-      return NextResponse.json({ message: 'Invalid National ID' }, { status: 400 });
+      return NextResponse.json(
+        { message: "Invalid National ID" },
+        { status: 400 }
+      );
     }
 
     // Check if the user already exists
@@ -25,7 +27,10 @@ export async function POST(request: NextRequest) {
     });
 
     if (existingUser) {
-      return NextResponse.json({ message: 'User already exists' }, { status: 400 });
+      return NextResponse.json(
+        { message: "User already exists" },
+        { status: 400 }
+      );
     }
 
     // Hash the password
@@ -36,25 +41,31 @@ export async function POST(request: NextRequest) {
       data: {
         nationalId,
         password: hashedPassword,
-        maritalStatus: 'Single',
-        employmentStatus: 'Unemployed',
+        maritalStatus: "Single",
+        employmentStatus: "Unemployed",
         chronicIllness: false,
         disabled: false,
         county: governmentRecord.district,
         subCounty: governmentRecord.division,
         constituency: governmentRecord.location,
         ward: governmentRecord.sublocation,
-        village: '',
+        village: "",
       },
     });
 
-    return NextResponse.json({ message: 'User registered successfully' }, { status: 201 });
+    return NextResponse.json(
+      { message: "User registered successfully" },
+      { status: 201 }
+    );
   } catch (error: unknown) {
-    console.error('Registration error:', error);
+    console.error("Registration error:", error);
     if (error instanceof Error) {
       return NextResponse.json({ message: error.message }, { status: 500 });
     } else {
-      return NextResponse.json({ message: 'An unexpected error occurred' }, { status: 500 });
+      return NextResponse.json(
+        { message: "An unexpected error occurred" },
+        { status: 500 }
+      );
     }
   }
 }
