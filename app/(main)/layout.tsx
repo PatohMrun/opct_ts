@@ -20,9 +20,9 @@ export default function MainLayout({
     <html lang="en">
       <body className={inter.className}>
         <NavRender />
-        {children}
+        <div className="min-h-[80vh]">{children}</div>
         <Footer />
-        </body>
+      </body>
     </html>
   );
 }

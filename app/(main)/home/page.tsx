@@ -4,11 +4,13 @@ import { useRouter } from "next/navigation";
 import Hero from "@/components/hero";
 import ProgressRings from "@/components/progressRings";
 import Updates from "@/components/updates";
+import nProgress from "nprogress";
 
 const Dashboard = () => {
   const router = useRouter();
 
   const handleHeroButtonClick = () => {
+    nProgress.start();
     router.push("/applicationForm");
   };
 
