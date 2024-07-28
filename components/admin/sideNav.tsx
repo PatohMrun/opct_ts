@@ -25,7 +25,7 @@ const SideNav = () => {
 
   return (
     <nav
-      className={`fixed left-0 top-0 h-[100vh] bg-primary text-white transition-all duration-300 ease-in-out ${
+      className={`fixed z-50 left-0 top-0 h-[100vh] bg-primary text-white transition-all duration-300 ease-in-out ${
         isExpanded ? "w-56" : "w-12"
       } md:relative`}
     >
