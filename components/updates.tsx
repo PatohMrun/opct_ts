@@ -1,115 +1,85 @@
 "use client";
 
-import React from 'react';
-import Slider from 'react-slick';
-// import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import React, { useEffect, useState } from 'react';
 
-interface ArrowProps {
-    className?: string;
-    style?: React.CSSProperties;
-    onClick?: () => void;
-  }
-
-  interface SliderSettings {
-  dots: boolean;
-  infinite: boolean;
-  speed: number;
-  slidesToShow: number;
-  slidesToScroll: number;
-  autoplay: boolean;
-  autoplaySpeed: number;
-  nextArrow: React.ReactElement;
-  prevArrow: React.ReactElement;
-  responsive: {
-    breakpoint: number;
-    settings: {
-      slidesToShow: number;
-      slidesToScroll: number;
-    };
-  }[];
-  }
+type Announcement = {
+  id: number;
+  title: string;
+  content: string;
+};
 
 const Updates: React.FC = () => {
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 2,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 10000,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
-    responsive: [
-      {
-        breakpoint: 640,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    fetchAnnouncements();
+  }, []);
+
+  const fetchAnnouncements = async () => {
+    try {
+      const response = await fetch("/api/announcements");
+      const data = await response.json();
+      setAnnouncements(data.announcements);
+    } catch (error) {
+      console.error("Failed to fetch announcements", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const nextSlide = () => {
+    setCurrentSlide((prevSlide) =>
+      prevSlide === announcements.length - 1 ? 0 : prevSlide + 1
+    );
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prevSlide) =>
+      prevSlide === 0 ? announcements.length - 1 : prevSlide - 1
+    );
   };
 
   return (
-    <section className='m-2 px-2  font-poppins'>
-        <div className="max-w-4xl p-4 mx-auto my-2">
-      <h2 className="text-center text-xl font-bold mb-4">UPDATES</h2>
-      <Slider {...settings}>
-        <div className="p-4">
-          <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-            <p className="text-gray-800">
-              We are thrilled to announce enhancements to the OPCT program! Enjoy increased benefits tailored to meet your specific needs, ensuring greater financial support for you or your loved ones.
-            </p>
+    <section className='m-2 px-2 font-poppins'>
+      <div className="max-w-4xl p-4 mx-auto my-2">
+        <h2 className="text-center text-xl font-bold mb-4">UPDATES</h2>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <div className="relative overflow-hidden">
+            <div
+              className="flex transition-transform duration-300"
+              style={{
+                transform: `translateX(-${currentSlide * 100}%)`,
+              }}
+            >
+              {announcements.map((announcement) => (
+                <div key={announcement.id} className="min-w-full p-4">
+                  <div className="bg-gray-100 p-6 rounded-lg shadow-md">
+                    <h3 className="text-lg font-bold mb-2">{announcement.title}</h3>
+                    <p className="text-gray-800">{announcement.content}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button
+              className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-800 text-white p-2"
+              onClick={prevSlide}
+            >
+              &#10094;
+            </button>
+            <button
+              className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-gray-800 text-white p-2"
+              onClick={nextSlide}
+            >
+              &#10095;
+            </button>
           </div>
-        </div>
-        <div className="p-4">
-          <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-            <p className="text-gray-800">
-              Get ready for exciting community events with OPCT! Join us for informative workshops and engaging activities designed to empower and connect older persons in our program.
-            </p>
-          </div>
-        </div>
-        {/* Add more slides as needed */}
-      </Slider>
-    </div>
+        )}
+      </div>
     </section>
-  );
-};
-
-// interface ArrowProps {
-//   className: string;
-//   style: React.CSSProperties;
-//   onClick: () => void;
-// }
-
-
-
-const NextArrow = (props: ArrowProps) => {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={`${className} absolute right-0 z-10`}
-      style={{ ...style, display: "block" }}
-      onClick={onClick}
-    >
-      {/* <FaArrowRight className="text-gray-800 text-3xl" /> */}
-    </div>
-  );
-};
-
-const PrevArrow = (props: ArrowProps) => {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={`${className} absolute left-0 z-10`}
-      style={{ ...style, display: "block" }}
-      onClick={onClick}
-    >
-      {/* <FaArrowLeft className="text-gray-800 text-3xl" /> */}
-    </div>
   );
 };
 
