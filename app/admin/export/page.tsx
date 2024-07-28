@@ -1,47 +1,74 @@
-"use client"
+"use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const EligibleNotEligiblePage = () => {
-  const [activeTab, setActiveTab] = useState("approved");
+export type ApprovedPerson = {
+  id: number;
+  name: string;
+  nationalId: string;
+  bankDetails: string;
+  alternatePayerBankDetails: string;
+};
 
-  const approvedData = [
-    {
-      id: 1,
-      name: "John Doe",
-      nationalId: "12345678",
-      bankDetails: "Bank of Kenya, Account No: 987654321",
-      alternatePayerBankDetails: "ABC Bank, Account No: 123456789",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      nationalId: "87654321",
-      bankDetails: "National Bank, Account No: 123456789",
-      alternatePayerBankDetails: "XYZ Bank, Account No: 987654321",
-    },
-    // Add more approved data here
-  ];
+export type NotApprovedPerson = {
+  id: number;
+  name: string;
+  nationalId: string;
+  email: string;
+  deathCertNo: string;
+};
 
-  const notApprovedData = [
-    {
-      id: 1,
-      name: "Alice Johnson",
-      nationalId: "11223344",
-      email: "alice@example.com",
-      deathCertNo: "DC12345",
-    },
-    {
-      id: 2,
-      name: "Bob Brown",
-      nationalId: "44332211",
-      email: "bob@example.com",
-      deathCertNo: "DC54321",
-    },
-    // Add more not approved data here
-  ];
+export type PendingApprovalPerson = {
+  id: number;
+  name: string;
+  nationalId: string;
+  applicationDate: string;
+};
 
-  const downloadData = (data, filename) => {
+const EligibleNotEligiblePage: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<
+    "approved" | "notApproved" | "pendingApproval"
+  >("approved");
+
+  const [approvedData, setApprovedData] = useState<ApprovedPerson[]>([]);
+  const [notApprovedData, setNotApprovedData] = useState<NotApprovedPerson[]>(
+    []
+  );
+  const [pendingApprovalData, setPendingApprovalData] = useState<
+    PendingApprovalPerson[]
+  >([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function fetchData() {
+    setLoading(true);
+    setError(null);
+    try {
+      const url = "/api/export-data";
+      const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const json = await res.json();
+      const { approved, rejected, pending } = json;
+
+      // alert(JSON.stringify(json));
+
+      setApprovedData(approved);
+      setNotApprovedData(rejected);
+      setPendingApprovalData(pending);
+    } catch (err) {
+      setError(`Could not fetch data. Please retry!`);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const downloadData = (data: object[], filename: string) => {
     const csvContent =
       "data:text/csv;charset=utf-8," +
       data.map((row) => Object.values(row).join(",")).join("\n");
@@ -56,7 +83,7 @@ const EligibleNotEligiblePage = () => {
 
   return (
     <div className="p-8 max-w-5xl mx-auto">
-      <h1 className="text-2xl font-bold text-center mb-8">OPCT Eligibility Status</h1>
+      <h1 className="text-2xl font-bold text-center mb-8">Export Data</h1>
 
       {/* Tabs */}
       <div className="flex justify-center mb-8">
@@ -68,7 +95,7 @@ const EligibleNotEligiblePage = () => {
               : "text-gray-500"
           } focus:outline-none`}
         >
-          Approved Individuals
+          Approved
         </button>
         <button
           onClick={() => setActiveTab("notApproved")}
@@ -78,82 +105,181 @@ const EligibleNotEligiblePage = () => {
               : "text-gray-500"
           } focus:outline-none`}
         >
-          Not Approved Individuals
+          Rejected
+        </button>
+        <button
+          onClick={() => setActiveTab("pendingApproval")}
+          className={`py-2 px-4 ${
+            activeTab === "pendingApproval"
+              ? "border-b-2 border-blue-600 text-blue-600"
+              : "text-gray-500"
+          } focus:outline-none`}
+        >
+          Pending
         </button>
       </div>
+
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-600 bg-opacity-50 z-50">
+          <div className="loader border-t-4 border-b-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div>
+        </div>
+      )}
 
       {/* Content */}
       {activeTab === "approved" && (
         <div className="mb-12">
           <h2 className="text-xl font-semibold mb-4">Approved Individuals</h2>
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border border-gray-300">
-              <thead>
-                <tr className="bg-gray-200 text-gray-600 text-left text-sm uppercase">
-                  <th className="py-3 px-4 border-b">Name</th>
-                  <th className="py-3 px-4 border-b">National ID</th>
-                  <th className="py-3 px-4 border-b">Bank Details</th>
-                  <th className="py-3 px-4 border-b">Alternate Payer Bank Details</th>
-                </tr>
-              </thead>
-              <tbody>
-                {approvedData.map((person) => (
-                  <tr key={person.id} className="hover:bg-gray-100">
-                    <td className="py-3 px-4 border-b">{person.name}</td>
-                    <td className="py-3 px-4 border-b">{person.nationalId}</td>
-                    <td className="py-3 px-4 border-b">{person.bankDetails}</td>
-                    <td className="py-3 px-4 border-b">
-                      {person.alternatePayerBankDetails}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="mt-4 text-right">
-            <button
-              onClick={() => downloadData(approvedData, "approved_individuals")}
-              className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500"
-            >
-              Download Approved Data
-            </button>
-          </div>
+          {approvedData.length > 0 ? (
+            <>
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-white border border-gray-300">
+                  <thead>
+                    <tr className="bg-gray-200 text-gray-600 text-left text-sm uppercase">
+                      <th className="py-3 px-4 border-b">Name</th>
+                      <th className="py-3 px-4 border-b">National ID</th>
+                      <th className="py-3 px-4 border-b">Bank Details</th>
+                      <th className="py-3 px-4 border-b">
+                        Alternate Payer Bank Details
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {approvedData.map((person) => (
+                      <tr key={person.id} className="hover:bg-gray-100">
+                        <td className="py-3 px-4 border-b">{person.name}</td>
+                        <td className="py-3 px-4 border-b">
+                          {person.nationalId}
+                        </td>
+                        <td className="py-3 px-4 border-b">
+                          {person.bankDetails}
+                        </td>
+                        <td className="py-3 px-4 border-b">
+                          {person.alternatePayerBankDetails}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="mt-4 text-right">
+                <button
+                  onClick={() =>
+                    downloadData(approvedData, "approved_individuals")
+                  }
+                  className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500"
+                >
+                  Download
+                </button>
+              </div>
+            </>
+          ) : (
+            <p className="text-gray-500">No approved individuals to display.</p>
+          )}
         </div>
       )}
 
       {activeTab === "notApproved" && (
         <div>
-          <h2 className="text-xl font-semibold mb-4">Not Approved Individuals</h2>
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border border-gray-300">
-              <thead>
-                <tr className="bg-gray-200 text-gray-600 text-left text-sm uppercase">
-                  <th className="py-3 px-4 border-b">Name</th>
-                  <th className="py-3 px-4 border-b">National ID</th>
-                  <th className="py-3 px-4 border-b">Email</th>
-                  <th className="py-3 px-4 border-b">Death Certificate No.</th>
-                </tr>
-              </thead>
-              <tbody>
-                {notApprovedData.map((person) => (
-                  <tr key={person.id} className="hover:bg-gray-100">
-                    <td className="py-3 px-4 border-b">{person.name}</td>
-                    <td className="py-3 px-4 border-b">{person.nationalId}</td>
-                    <td className="py-3 px-4 border-b">{person.email}</td>
-                    <td className="py-3 px-4 border-b">{person.deathCertNo}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="mt-4 text-right">
-            <button
-              onClick={() => downloadData(notApprovedData, "not_approved_individuals")}
-              className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500"
-            >
-              Download Not Approved Data
-            </button>
-          </div>
+          <h2 className="text-xl font-semibold mb-4">
+            Not Approved Individuals
+          </h2>
+          {notApprovedData.length > 0 ? (
+            <>
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-white border border-gray-300">
+                  <thead>
+                    <tr className="bg-gray-200 text-gray-600 text-left text-sm uppercase">
+                      <th className="py-3 px-4 border-b">Name</th>
+                      <th className="py-3 px-4 border-b">National ID</th>
+                      <th className="py-3 px-4 border-b">Email</th>
+                      <th className="py-3 px-4 border-b">
+                        Death Certificate No.
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {notApprovedData.map((person) => (
+                      <tr key={person.id} className="hover:bg-gray-100">
+                        <td className="py-3 px-4 border-b">{person.name}</td>
+                        <td className="py-3 px-4 border-b">
+                          {person.nationalId}
+                        </td>
+                        <td className="py-3 px-4 border-b">{person.email}</td>
+                        <td className="py-3 px-4 border-b">
+                          {person.deathCertNo}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="mt-4 text-right">
+                <button
+                  onClick={() =>
+                    downloadData(notApprovedData, "not_approved_individuals")
+                  }
+                  className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500"
+                >
+                  Download
+                </button>
+              </div>
+            </>
+          ) : (
+            <p className="text-gray-500">
+              No not approved individuals to display.
+            </p>
+          )}
+        </div>
+      )}
+
+      {activeTab === "pendingApproval" && (
+        <div>
+          <h2 className="text-xl font-semibold mb-4">Pending Approval</h2>
+          {pendingApprovalData.length > 0 ? (
+            <>
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-white border border-gray-300">
+                  <thead>
+                    <tr className="bg-gray-200 text-gray-600 text-left text-sm uppercase">
+                      <th className="py-3 px-4 border-b">Name</th>
+                      <th className="py-3 px-4 border-b">National ID</th>
+                      <th className="py-3 px-4 border-b">Application Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pendingApprovalData.map((person) => (
+                      <tr key={person.id} className="hover:bg-gray-100">
+                        <td className="py-3 px-4 border-b">{person.name}</td>
+                        <td className="py-3 px-4 border-b">
+                          {person.nationalId}
+                        </td>
+                        <td className="py-3 px-4 border-b">
+                          {person.applicationDate}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="mt-4 text-right">
+                <button
+                  onClick={() =>
+                    downloadData(
+                      pendingApprovalData,
+                      "pending_approval_individuals"
+                    )
+                  }
+                  className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500"
+                >
+                  Download
+                </button>
+              </div>
+            </>
+          ) : (
+            <p className="text-gray-500">
+              No pending approval individuals to display.
+            </p>
+          )}
         </div>
       )}
     </div>
