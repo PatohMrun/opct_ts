@@ -262,6 +262,7 @@ const ApplicationForm: React.FC = () => {
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-gray-900"
               placeholder="E.g., John"
               required
+              disabled
             />
           </div>
           <div>
@@ -278,6 +279,7 @@ const ApplicationForm: React.FC = () => {
               value={middleName}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-gray-900"
               placeholder="E.g., Fred"
+              disabled
             />
           </div>
           <div>
@@ -291,10 +293,11 @@ const ApplicationForm: React.FC = () => {
               type="text"
               id="personalLastName"
               name="personalLastName"
-              onChange={(e) => setLastName(e.target.value)}
+              value={lastName}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-gray-900"
               placeholder="E.g., Smith"
               required
+              disabled
             />
           </div>
           <div>
@@ -310,6 +313,7 @@ const ApplicationForm: React.FC = () => {
               id="personalGender"
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-gray-900"
               required
+              disabled
             >
               <option value="" disabled selected>
                 Select
@@ -329,6 +333,7 @@ const ApplicationForm: React.FC = () => {
               value={dob}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-gray-900"
               required
+              disabled
             />
           </div>
           <div>
@@ -346,6 +351,7 @@ const ApplicationForm: React.FC = () => {
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-gray-900"
               placeholder="E.g., 12345678"
               required
+              disabled
             />
           </div>
           <div>
@@ -362,6 +368,7 @@ const ApplicationForm: React.FC = () => {
               value={kra}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-gray-900"
               placeholder="E.g., A0123456XF"
+              disabled
             />
           </div>
           <div>
