@@ -1,9 +1,10 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/link-with-loader";
 import React, { useState } from "react";
 import { IoEye, IoEyeOff } from "react-icons/io5";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
+import nProgress from "nprogress";
 
 const Register = () => {
   const [nationalId, setNationalId] = useState("");
@@ -14,7 +15,9 @@ const Register = () => {
   const [error, setError] = useState<string>("");
   const router = useRouter();
 
-  const handleNationalIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNationalIdChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setNationalId(event.target.value);
   };
 
@@ -22,7 +25,9 @@ const Register = () => {
     setPassword(event.target.value);
   };
 
-  const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleConfirmPasswordChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setConfirmPassword(event.target.value);
   };
 
@@ -36,26 +41,28 @@ const Register = () => {
     }
 
     try {
-      const response = await fetch('/api/register', {
-        method: 'POST',
+      nProgress.start();
+      const response = await fetch("/api/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ nationalId, password }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Registration failed');
+        throw new Error(errorData.message || "Registration failed");
       }
 
       // Registration successful
-      router.push('/login');
+      router.push("/login");
     } catch (error: unknown) {
+      nProgress.done();
       if (error instanceof Error) {
         setError(error.message);
       } else {
-        setError('An unexpected error occurred');
+        setError("An unexpected error occurred");
       }
     }
   };
@@ -97,7 +104,15 @@ const Register = () => {
             className="absolute right-0 top-1/2 transform -translate-y-1/2"
             onClick={toggleShowPassword}
           >
-            {showPassword ? <span className="mx-8 text-gray-500"><IoEyeOff /></span> : <span className="mx-8 text-gray-500"><IoEye /></span>}
+            {showPassword ? (
+              <span className="mx-8 text-gray-500">
+                <IoEyeOff />
+              </span>
+            ) : (
+              <span className="mx-8 text-gray-500">
+                <IoEye />
+              </span>
+            )}
           </button>
         </div>
         <label htmlFor=" Repeat password">Repeat Password:</label>
@@ -114,15 +129,28 @@ const Register = () => {
             className="absolute right-0 top-1/2 transform -translate-y-1/2"
             onClick={toggleShowConfirmPassword}
           >
-            {showConfirmPassword ? <span className="mx-8 text-gray-500"><IoEyeOff /></span> : <span className="mx-8 text-gray-500"><IoEye /></span>}
+            {showConfirmPassword ? (
+              <span className="mx-8 text-gray-500">
+                <IoEyeOff />
+              </span>
+            ) : (
+              <span className="mx-8 text-gray-500">
+                <IoEye />
+              </span>
+            )}
           </button>
         </div>
         <input
           type="submit"
           value="Register"
-          className="bg-secondary text-gray-900 font-bold mx-auto my-2 p-2 rounded-lg w-36"
+          className="bg-green-600 text-white font-bold px-4 py-2 rounded-lg hover:bg-green-500 transition-colors duration-300 mx-auto my-2 w-36"
         />
-        <p className="text-xs mx-auto">Already have an account? <Link href="/login"><span className="text-green-200">Log in</span></Link></p>
+        <p className="text-xs mx-auto">
+          Already have an account?{" "}
+          <Link href="/login">
+            <span className="text-green-200">Log in</span>
+          </Link>
+        </p>
       </form>
     </div>
   );

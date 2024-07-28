@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from "next/image";
 import HeroButton from './heroButton';
+import { isLoggedIn } from '@/utils/auth';
 
 interface HeroProps {
   photo: string;
@@ -14,6 +15,7 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = ({ photo, alt, head, desc, buttonName, onButtonClick }) => {
+    
     return ( 
         <div className="relative font-poppins">
             <div className="relative min-w-3/4 flex justify-center items-center">

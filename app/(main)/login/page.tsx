@@ -1,10 +1,11 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/link-with-loader";
 import React, { useState, FormEvent } from "react";
 import { login } from "../../../utils/auth";
 import { IoEye, IoEyeOff } from "react-icons/io5";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
+import nProgress from "nprogress";
 
 const Login: React.FC = () => {
   const [nationalId, setNationalId] = useState<string>("");
@@ -13,7 +14,9 @@ const Login: React.FC = () => {
   const [error, setError] = useState<string>("");
   const router = useRouter();
 
-  const handleNationalIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNationalIdChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setNationalId(event.target.value);
   };
 
@@ -24,39 +27,41 @@ const Login: React.FC = () => {
   const handleLoginSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError("");
-  
+
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
+      nProgress.start();
+      const response = await fetch("/api/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ nationalId, password }),
-        credentials: 'include',
+        credentials: "include",
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Login failed');
+        throw new Error(errorData.message || "Login failed");
       }
-  
+
       const data = await response.json();
-      sessionStorage.setItem('userData', JSON.stringify(data.user));
-      
+      sessionStorage.setItem("userData", JSON.stringify(data.user));
+
       // Use the redirect URL from the server response
       if (data.redirect) {
         router.push(data.redirect);
       } else {
         // Fallback to /home if no redirect is provided
-        router.push('/home');
+        router.push("/home");
       }
-  
     } catch (error: unknown) {
+      nProgress.done();
       if (error instanceof Error) {
         setError(error.message);
       } else {
-        setError('An unexpected error occurred');
+        setError("An unexpected error occurred");
       }
+    } finally {
     }
   };
 
@@ -73,7 +78,7 @@ const Login: React.FC = () => {
         {error && <p className="text-red-500 text-sm">{error}</p>}
         <label htmlFor="ID number">National ID No:</label>
         <input
-          type="text"
+          type="number"
           placeholder="ID Number"
           value={nationalId}
           onChange={handleNationalIdChange}
@@ -93,15 +98,27 @@ const Login: React.FC = () => {
             className="absolute right-0 top-1/2 transform -translate-y-1/2"
             onClick={toggleShowPassword}
           >
-            {showPassword ? <span className="mx-8 text-gray-500"><IoEyeOff /></span> : <span className="mx-8 text-gray-500"><IoEye /></span>}
+            {showPassword ? (
+              <span className="mx-8 text-gray-500">
+                <IoEyeOff />
+              </span>
+            ) : (
+              <span className="mx-8 text-gray-500">
+                <IoEye />
+              </span>
+            )}
           </button>
         </div>
         <input
           type="submit"
           value="Log in"
-          className="bg-secondary text-gray-900 font-bold mx-auto my-2 p-2 rounded-lg w-36"
-        />
-        <p className="text-xs mx-auto">Don&apos;t have an account? <Link href="/register"><span className="text-green-200">Register</span></Link></p>
+          className="bg-green-600 text-white font-bold px-4 py-2 rounded-lg hover:bg-green-500 transition-colors duration-300 mx-auto my-2 w-36"  />
+        <p className="text-xs mx-auto">
+          Don&apos;t have an account?{" "}
+          <Link href="/register">
+            <span className="text-green-200">Register</span>
+          </Link>
+        </p>
       </form>
     </div>
   );

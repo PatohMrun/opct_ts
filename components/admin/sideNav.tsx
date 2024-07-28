@@ -1,17 +1,20 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from "@/components/link-with-loader";
+import { redirect, usePathname, useRouter } from "next/navigation";
 import { AiOutlineDashboard, AiOutlineLogout } from "react-icons/ai";
 import { FiMenu } from "react-icons/fi";
 import { CiViewList } from "react-icons/ci";
 import { LuMessageSquare } from "react-icons/lu";
 import { Download } from "lucide-react";
+import { logout } from "@/utils/auth";
+import nProgress from "nprogress";
 
 const SideNav = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   const navItems = [
     { icon: AiOutlineDashboard, name: "Dashboard", path: "/admin" },
@@ -25,9 +28,15 @@ const SideNav = () => {
     },
   ];
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // Implement your logout logic here
-    console.log("Logout clicked");
+    nProgress.start();
+    try {
+      await logout();
+      router.replace("/");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

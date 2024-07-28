@@ -88,6 +88,7 @@ const AnnouncementList: React.FC = () => {
   }
 
   async function deleteAnnouncement(id: number) {
+    if (!confirm("Are you sure you want to delete this announcement?")) return;
     setLoading(true);
     const url = `/api/announcements/${id}`;
     const response = await fetch(url, {
@@ -143,17 +144,20 @@ const AnnouncementList: React.FC = () => {
               No announcements available. Please add a new announcement.
             </p>
           ) : (
-            <ul className="list-disc list-inside">
+            <ul className="list-none space-y-4">
               {announcements.map((announcement, index) => (
-                <li key={announcement.id} className="mb-2">
+                <li
+                  key={announcement.id}
+                  className="border border-gray-300 rounded-lg p-4 shadow-sm"
+                >
                   <h2 className="text-xl font-semibold">
                     {announcement.title}
                   </h2>
-                  <p>{announcement.content}</p>
-                  <div className="flex justify-end">
+                  <p className="mb-2">{announcement.content}</p>
+                  <div className="flex justify-end space-x-2">
                     <button
                       onClick={() => handleEdit(index)}
-                      className="text-blue-500 hover:underline mr-4"
+                      className="text-blue-500 hover:underline"
                     >
                       Edit
                     </button>
