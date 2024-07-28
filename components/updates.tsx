@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 type Announcement = {
   id: number;
@@ -42,11 +42,13 @@ const Updates: React.FC = () => {
   };
 
   return (
-    <section className='m-2 px-2 font-poppins'>
+    <section className="m-2 px-2 font-poppins">
       <div className="max-w-4xl p-4 mx-auto my-2">
         <h2 className="text-center text-xl font-bold mb-4">UPDATES</h2>
         {loading ? (
-          <p>Loading...</p>
+          <div className="flex justify-center items-center py-4">
+            <div className="w-12 h-12 border-4 border-t-transparent border-blue-500 border-solid rounded-full animate-spin"></div>
+          </div>
         ) : (
           <div className="relative overflow-hidden">
             <div
@@ -58,7 +60,9 @@ const Updates: React.FC = () => {
               {announcements.map((announcement) => (
                 <div key={announcement.id} className="min-w-full p-4">
                   <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-                    <h3 className="text-lg font-bold mb-2">{announcement.title}</h3>
+                    <h3 className="text-lg font-bold mb-2">
+                      {announcement.title}
+                    </h3>
                     <p className="text-gray-800">{announcement.content}</p>
                   </div>
                 </div>
