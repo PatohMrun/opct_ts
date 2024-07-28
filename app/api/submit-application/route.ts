@@ -42,10 +42,10 @@ export async function POST(req: NextRequest) {
     // Create or update Application
     const application = await prisma.application.upsert({
       where: { userId: updatedUser.id },
-      update: { status: 'Submitted' },
+      update: { status: 'Pending' },
       create: {
         userId: updatedUser.id,
-        status: 'Submitted',
+        status: 'Pending',
       },
     });
 

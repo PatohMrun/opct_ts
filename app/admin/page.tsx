@@ -22,7 +22,7 @@ async function getApplicationData() {
   });
 
   const applicationData = applications.map(app => ({
-    id: app.id.toString(),
+    id: app.id,
     firstName: app.user.governmentRecord.firstName,
     middleName: app.user.governmentRecord.middleName || '',
     lastName: app.user.governmentRecord.lastName,
@@ -67,12 +67,12 @@ async function getApplicationData() {
       dependentDob: dep.dob.toISOString().split('T')[0],
       dependentRelationship: dep.relationship,
     })),
-    status: app.status.toLowerCase() as 'pending' | 'approved' | 'rejected',
+    status: app.status as 'Pending' | 'Approved' | 'Rejected',
     isDeceased: !!app.user.governmentRecord.deathCertNo,
   }));
 
-  const pendingApprovals = applications.filter(app => app.status === 'PENDING' as ApplicationStatus).length;
-  const approvedApplicants = applications.filter(app => app.status === 'APPROVED' as ApplicationStatus).length;
+  const pendingApprovals = applications.filter(app => app.status === 'Pending' as ApplicationStatus).length;
+  const approvedApplicants = applications.filter(app => app.status === 'Pending' as ApplicationStatus).length;
 
   const annualApplicantTrendData = await prisma.application.groupBy({
     by: ['submittedAt'],

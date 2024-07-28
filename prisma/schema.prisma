@@ -149,7 +149,7 @@ enum EmploymentStatus {
 }
 
 enum ApplicationStatus {
-  Submitted
+  Unsubmitted
   Pending
   Approved
   Rejected

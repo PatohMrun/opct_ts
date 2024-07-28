@@ -50,7 +50,7 @@ interface ApplicationData {
   payeeBankName: string;
   payeeBankAccount: string;
   dependents: Dependent[];
-  status: 'pending' | 'approved' | 'rejected';
+  status: 'Pending' | 'Approved' | 'Rejected';
   isDeceased: boolean;
 }
 
@@ -72,7 +72,7 @@ const Applications: React.FC<ApplicationsProps> = ({ applicationData }) => {
     setIsModalOpen(false);
   };
 
-  const handleStatusChange = async (id: number, newStatus: 'approved' | 'rejected') => {
+  const handleStatusChange = async (id: number, newStatus: 'Approved' | 'Rejected') => {
     try {
       console.log(`Updating application ${id} to status ${newStatus}`); // Debugging log
       const response = await fetch(`/api/applications/${id}`, {
@@ -92,11 +92,11 @@ const Applications: React.FC<ApplicationsProps> = ({ applicationData }) => {
 
       setApplications(prevData =>
         prevData.map(app =>
-          app.id === id ? { ...app, status: updatedApplication.status.toLowerCase() as ApplicationData['status'] } : app
+          app.id === id ? { ...app, status: updatedApplication.status as ApplicationData['status'] } : app
         )
       );
       if (selectedApplication && selectedApplication.id === id) {
-        setSelectedApplication({ ...selectedApplication, status: updatedApplication.status.toLowerCase() as ApplicationData['status'] });
+        setSelectedApplication({ ...selectedApplication, status: updatedApplication.status as ApplicationData['status'] });
       }
       closeModal();
     } catch (error) {
@@ -105,18 +105,18 @@ const Applications: React.FC<ApplicationsProps> = ({ applicationData }) => {
     }
   };
 
-  const StatusButton: React.FC<{ status: 'approved' | 'rejected', onClick: () => void, disabled: boolean }> = ({ status, onClick, disabled }) => (
-    <button
+  const StatusButton: React.FC<{ status: 'Approved' | 'Rejected', onClick: () => void, disabled: boolean }> = ({ status, onClick, disabled }) => (
+    <button type='button'
       onClick={onClick}
       disabled={disabled}
       className={`py-1 px-2 rounded-full text-white text-xs font-bold ${
-        status === 'approved'
+        status === 'Approved'
           ? disabled ? 'bg-green-300' : 'bg-green-500 hover:bg-green-600'
           : disabled ? 'bg-red-300' : 'bg-red-500 hover:bg-red-600'
       } transition-colors duration-200 flex items-center`}
     >
-      {status === 'approved' ? <FiCheckCircle className="mr-1" /> : <FiXCircle className="mr-1" />}
-      {status === 'approved' ? 'Approve' : 'Reject'}
+      {status === 'Approved' ? <FiCheckCircle className="mr-1" /> : <FiXCircle className="mr-1" />}
+      {status === 'Approved' ? 'Approve' : 'Reject'}
     </button>
   );
 
@@ -147,8 +147,8 @@ const Applications: React.FC<ApplicationsProps> = ({ applicationData }) => {
                 <td className="py-4 px-6">{application.phone}</td>
                 <td className="py-4 px-6">
                   <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                    application.status === 'approved' ? 'bg-green-100 text-green-800' :
-                    application.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                    application.status === 'Approved' ? 'bg-green-100 text-green-800' :
+                    application.status === 'Rejected' ? 'bg-red-100 text-red-800' :
                     'bg-yellow-100 text-yellow-800'
                   }`}>
                     {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
@@ -156,7 +156,7 @@ const Applications: React.FC<ApplicationsProps> = ({ applicationData }) => {
                 </td>
                 <td className="py-4 px-6 text-center">
                   <div className="flex items-center justify-center space-x-2">
-                    <button
+                    <button type='button'
                       onClick={() => openModal(application)}
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded inline-flex items-center"
                     >
@@ -164,14 +164,14 @@ const Applications: React.FC<ApplicationsProps> = ({ applicationData }) => {
                       View
                     </button>
                     <StatusButton
-                      status="approved"
-                      onClick={() => handleStatusChange(application.id, 'approved')}
-                      disabled={application.status === 'approved' || application.isDeceased}
+                      status="Approved"
+                      onClick={() => handleStatusChange(application.id, 'Approved')}
+                      disabled={application.status === 'Approved' || application.isDeceased}
                     />
                     <StatusButton
-                      status="rejected"
-                      onClick={() => handleStatusChange(application.id, 'rejected')}
-                      disabled={application.status === 'rejected' || application.isDeceased}
+                      status="Rejected"
+                      onClick={() => handleStatusChange(application.id, 'Rejected')}
+                      disabled={application.status === 'Rejected' || application.isDeceased}
                     />
                   </div>
                 </td>
@@ -252,14 +252,14 @@ const Applications: React.FC<ApplicationsProps> = ({ applicationData }) => {
             </div>
             <div className="items-center px-4 py-3 flex justify-end space-x-2">
               <StatusButton
-                status="approved"
-                onClick={() => handleStatusChange(selectedApplication.id, 'approved')}
-                disabled={selectedApplication.status === 'approved' || selectedApplication.isDeceased}
+                status="Approved"
+                onClick={() => handleStatusChange(selectedApplication.id, 'Approved')}
+                disabled={selectedApplication.status === 'Approved' || selectedApplication.isDeceased}
               />
               <StatusButton
-                status="rejected"
-                onClick={() => handleStatusChange(selectedApplication.id, 'rejected')}
-                disabled={selectedApplication.status === 'rejected' || selectedApplication.isDeceased}
+                status="Rejected"
+                onClick={() => handleStatusChange(selectedApplication.id, 'Rejected')}
+                disabled={selectedApplication.status === 'Rejected' || selectedApplication.isDeceased}
               />
               <button
                 onClick={closeModal}
