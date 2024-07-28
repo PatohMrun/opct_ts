@@ -28,7 +28,7 @@ const Dashboard = () => {
       </div>
 
       <ProgressRings />
-      {/* <Updates /> */}
+      <Updates />
     </div>
   );
 };

@@ -129,7 +129,6 @@ const AnnouncementList: React.FC = () => {
   };
 
   return (
-    
     <div className="p-6 -z-50 ">
       <h1 className="text-2xl font-bold mb-4">Announcements</h1>
       {loading && (
@@ -147,7 +146,9 @@ const AnnouncementList: React.FC = () => {
             <ul className="list-disc list-inside">
               {announcements.map((announcement, index) => (
                 <li key={announcement.id} className="mb-2">
-                  <h2 className="text-xl font-semibold">{announcement.title}</h2>
+                  <h2 className="text-xl font-semibold">
+                    {announcement.title}
+                  </h2>
                   <p>{announcement.content}</p>
                   <div className="flex justify-end">
                     <button
@@ -168,7 +169,10 @@ const AnnouncementList: React.FC = () => {
             </ul>
           )}
           <button
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => {
+              setEditingIndex(null);
+              setIsModalOpen(true);
+            }}
             className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
           >
             Add Announcement
