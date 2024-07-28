@@ -130,7 +130,7 @@ const AnnouncementList: React.FC = () => {
 
   return (
     
-    <div className="p-6 relative -z-50 ">
+    <div className="p-6 -z-50 ">
       <h1 className="text-2xl font-bold mb-4">Announcements</h1>
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-600 bg-opacity-50 z-50">
