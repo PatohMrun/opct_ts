@@ -7,6 +7,7 @@ import { AiOutlineDashboard, AiOutlineLogout } from "react-icons/ai";
 import { FiMenu } from "react-icons/fi";
 import { CiViewList } from "react-icons/ci";
 import { LuMessageSquare } from "react-icons/lu";
+import { Download } from "lucide-react";
 
 const SideNav = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -16,6 +17,12 @@ const SideNav = () => {
     { icon: AiOutlineDashboard, name: "Dashboard", path: "/admin" },
     { icon: CiViewList, name: "Announcements", path: "/admin/announcements" },
     { icon: LuMessageSquare, name: "Messages", path: "/admin/messages" },
+    // export
+    {
+      name: "Export Data",
+      path: "/admin/export",
+      icon: Download,
+    },
   ];
 
   const handleLogout = () => {
