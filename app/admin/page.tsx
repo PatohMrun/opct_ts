@@ -9,7 +9,11 @@ async function getApplicationData() {
   const currentYear = new Date().getFullYear();
 
   const applications = await prisma.application.findMany({
+    orderBy:{
+      status:"asc"
+    },
     include: {
+    
       user: {
         include: {
           governmentRecord: true,
