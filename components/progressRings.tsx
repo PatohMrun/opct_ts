@@ -1,6 +1,6 @@
 "use client";
 
-import { FaCheck } from "react-icons/fa6";
+import { FaCheck } from "react-icons/fa";
 import { FaHourglassEnd } from "react-icons/fa";
 import { IoMdTime } from "react-icons/io";
 import { getUser } from "@/utils/auth";
@@ -95,11 +95,17 @@ const ProgressRings = () => {
           }`}
         >
           <div
-            className={`bg-green-500 rounded-full flex justify-center items-center w-16 h-16 ${
-              status === "Pending" ? "border-4 border-blue-600" : ""
+            className={`rounded-full flex justify-center items-center w-16 h-16 ${
+              status === "Pending" || status === null
+                ? "bg-gray-500"
+                : "bg-green-500"
             }`}
           >
-            <FaCheck size={28} />
+            {status === "Pending" || status === null ? (
+              <FaHourglassEnd size={28} />
+            ) : (
+              <FaCheck size={28} />
+            )}
           </div>
           <div className="text-center">
             <h3 className="text-lg font-semibold">Application Submitted</h3>
@@ -124,11 +130,17 @@ const ProgressRings = () => {
           }`}
         >
           <div
-            className={`bg-yellow-500 rounded-full flex justify-center items-center w-16 h-16 ${
-              status === "In Review" ? "border-4 border-blue-600" : ""
+            className={`rounded-full flex justify-center items-center w-16 h-16 ${
+              status === "In Review" || status === null
+                ? "bg-gray-500"
+                : "bg-green-500"
             }`}
           >
-            <FaHourglassEnd size={28} />
+            {status === "In Review" || status === null ? (
+              <FaHourglassEnd size={28} />
+            ) : (
+              <FaCheck size={28} />
+            )}
           </div>
           <div className="text-center">
             <h3 className="text-lg font-semibold">In Review</h3>
@@ -151,16 +163,20 @@ const ProgressRings = () => {
           }`}
         >
           <div
-            className={`bg-gray-500 rounded-full flex justify-center items-center w-16 h-16 ${
-              status === "Approved" ? "border-4 border-blue-600" : ""
+            className={`rounded-full flex justify-center items-center w-16 h-16 ${
+              status === "Approved" || status === "Rejected"
+                ? "bg-green-500"
+                : "bg-gray-500"
             }`}
           >
-            <IoMdTime size={28} />
+            {status === "Approved" || status === "Rejected" ? (
+              <FaCheck size={28} />
+            ) : (
+              <FaHourglassEnd size={28} />
+            )}
           </div>
           <div className="text-center">
             <h3 className="text-lg font-semibold">
-              {/* Approved or Rejected */}
-
               {status === "Approved" && "Approved"}
               {status === "Rejected" && "Rejected"}
               {status === null && "Approved/Rejected"}
