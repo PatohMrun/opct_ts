@@ -63,6 +63,8 @@ model User {
   Message Message[]
 }
 
+
+
 model Application {
   id          Int               @id @default(autoincrement())
   userId      Int               @unique
