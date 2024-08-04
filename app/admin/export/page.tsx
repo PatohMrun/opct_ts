@@ -86,7 +86,9 @@ const EligibleNotEligiblePage: React.FC = () => {
 
   return (
     <div className="p-8 max-w-5xl mx-auto">
-      <h1 className="text-2xl font-bold text-center mb-8">Export Data</h1>
+      <h1 className="text-2xl font-bold text-center mb-8">
+        Eligible and Not Eligible Individuals
+      </h1>
 
       {/* Tabs */}
       <div className="flex justify-center mb-8">
