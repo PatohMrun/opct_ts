@@ -10,6 +10,7 @@ export type ApprovedPerson = {
   nationalId: string;
   bankDetails: string;
   alternatePayerBankDetails: string;
+  phoneNumber: string;
 };
 
 export type NotApprovedPerson = {
@@ -143,6 +144,7 @@ const EligibleNotEligiblePage: React.FC = () => {
                       <th className="py-3 px-4 border-b">
                         Alternate Payer Bank Details
                       </th>
+                      <th>Phone Number</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -157,6 +159,9 @@ const EligibleNotEligiblePage: React.FC = () => {
                         </td>
                         <td className="py-3 px-4 border-b">
                           {person.alternatePayerBankDetails}
+                        </td>
+                        <td className="py-3 px-4 border-b">
+                          {person.phoneNumber}
                         </td>
                       </tr>
                     ))}

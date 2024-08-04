@@ -31,7 +31,6 @@ enum ApplicationStatus {
 
 interface User {
   nationalId: string;
-  gender: Gender;
   maritalStatus: MaritalStatus;
   employmentStatus: EmploymentStatus;
   applicationStatus: ApplicationStatus;
@@ -49,7 +48,6 @@ const UserProfile: React.FC = () => {
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState<User>({
     nationalId: "",
-    gender: Gender.Male,
     maritalStatus: MaritalStatus.Single,
     employmentStatus: EmploymentStatus.Unemployed,
     applicationStatus: ApplicationStatus.Unsubmitted,
@@ -229,7 +227,7 @@ const UserProfile: React.FC = () => {
             onChange={handleChange}
             disabled
           />
-          <SelectField
+          {/* <SelectField
             label="Gender"
             name="gender"
             value={formData.gender}
@@ -238,7 +236,7 @@ const UserProfile: React.FC = () => {
               value,
               label: value,
             }))}
-          />
+          /> */}
           <SelectField
             label="Marital Status"
             name="maritalStatus"
