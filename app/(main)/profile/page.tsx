@@ -4,27 +4,29 @@ import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { getUser } from "@/utils/auth";
 import { Loader2, AlertCircle } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 enum Gender {
   Male = "Male",
-  Female = "Female"
+  Female = "Female",
 }
 
 enum MaritalStatus {
   Single = "Single",
   Married = "Married",
-  Widowed = "Widowed"
+  Widowed = "Widowed",
 }
 
 enum EmploymentStatus {
   Employed = "Employed",
-  Unemployed = "Unemployed"
+  Unemployed = "Unemployed",
 }
 
 enum ApplicationStatus {
   Unsubmitted = "Unsubmitted",
   Pending = "Pending",
   Approved = "Approved",
-  Rejected = "Rejected"
+  Rejected = "Rejected",
 }
 
 interface User {
@@ -87,11 +89,14 @@ const UserProfile: React.FC = () => {
     fetchUserData();
   }, []);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value, type } = e.target;
     setFormData({
       ...formData,
-      [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+      [name]:
+        type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
     });
   };
 
@@ -125,7 +130,9 @@ const UserProfile: React.FC = () => {
     return (
       <div className="flex justify-center items-center h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
-        <span className="ml-2 text-lg font-medium text-gray-700">Loading...</span>
+        <span className="ml-2 text-lg font-medium text-gray-700">
+          Loading...
+        </span>
       </div>
     );
   }
@@ -133,7 +140,10 @@ const UserProfile: React.FC = () => {
   if (error) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <div
+          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+          role="alert"
+        >
           <div className="flex">
             <AlertCircle className="h-5 w-5 mr-2" />
             <span className="block sm:inline">{error}</span>
@@ -145,7 +155,13 @@ const UserProfile: React.FC = () => {
 
   if (!user) return null;
 
-  const InputField: React.FC<{ label: string; name: string; value: string; onChange: (e: ChangeEvent<HTMLInputElement>) => void; disabled?: boolean }> = ({ label, name, value, onChange, disabled }) => (
+  const InputField: React.FC<{
+    label: string;
+    name: string;
+    value: string;
+    onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+    disabled?: boolean;
+  }> = ({ label, name, value, onChange, disabled }) => (
     <div className="mb-4">
       <label className="block text-sm font-medium text-gray-700">{label}</label>
       <input
@@ -159,7 +175,13 @@ const UserProfile: React.FC = () => {
     </div>
   );
 
-  const SelectField: React.FC<{ label: string; name: string; value: string; onChange: (e: ChangeEvent<HTMLSelectElement>) => void; options: { value: string; label: string }[] }> = ({ label, name, value, onChange, options }) => (
+  const SelectField: React.FC<{
+    label: string;
+    name: string;
+    value: string;
+    onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
+    options: { value: string; label: string }[];
+  }> = ({ label, name, value, onChange, options }) => (
     <div className="mb-4">
       <label className="block text-sm font-medium text-gray-700">{label}</label>
       <select
@@ -177,7 +199,12 @@ const UserProfile: React.FC = () => {
     </div>
   );
 
-  const CheckboxField: React.FC<{ label: string; name: string; checked: boolean; onChange: (e: ChangeEvent<HTMLInputElement>) => void }> = ({ label, name, checked, onChange }) => (
+  const CheckboxField: React.FC<{
+    label: string;
+    name: string;
+    checked: boolean;
+    onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  }> = ({ label, name, checked, onChange }) => (
     <div className="flex items-center mb-4">
       <input
         type="checkbox"
@@ -195,36 +222,86 @@ const UserProfile: React.FC = () => {
       <h1 className="text-3xl font-bold mb-6 text-gray-800">User Profile</h1>
       {editMode ? (
         <form onSubmit={handleSubmit} className="space-y-6">
-          <InputField label="National ID" name="nationalId" value={formData.nationalId} onChange={handleChange} disabled />
+          <InputField
+            label="National ID"
+            name="nationalId"
+            value={formData.nationalId}
+            onChange={handleChange}
+            disabled
+          />
           <SelectField
             label="Gender"
             name="gender"
             value={formData.gender}
             onChange={handleChange}
-            options={Object.values(Gender).map(value => ({ value, label: value }))}
+            options={Object.values(Gender).map((value) => ({
+              value,
+              label: value,
+            }))}
           />
           <SelectField
             label="Marital Status"
             name="maritalStatus"
             value={formData.maritalStatus}
             onChange={handleChange}
-            options={Object.values(MaritalStatus).map(value => ({ value, label: value }))}
+            options={Object.values(MaritalStatus).map((value) => ({
+              value,
+              label: value,
+            }))}
           />
           <SelectField
             label="Employment Status"
             name="employmentStatus"
             value={formData.employmentStatus}
             onChange={handleChange}
-            options={Object.values(EmploymentStatus).map(value => ({ value, label: value }))}
+            options={Object.values(EmploymentStatus).map((value) => ({
+              value,
+              label: value,
+            }))}
           />
-         
-          <CheckboxField label="Chronic Illness" name="chronicIllness" checked={formData.chronicIllness} onChange={handleChange} />
-          <CheckboxField label="Disabled" name="disabled" checked={formData.disabled} onChange={handleChange} />
-          <InputField label="County" name="county" value={formData.county} onChange={handleChange} />
-          <InputField label="Sub-County" name="subCounty" value={formData.subCounty} onChange={handleChange} />
-          <InputField label="Constituency" name="constituency" value={formData.constituency} onChange={handleChange} />
-          <InputField label="Ward" name="ward" value={formData.ward} onChange={handleChange} />
-          <InputField label="Village" name="village" value={formData.village} onChange={handleChange} />
+
+          <CheckboxField
+            label="Chronic Illness"
+            name="chronicIllness"
+            checked={formData.chronicIllness}
+            onChange={handleChange}
+          />
+          <CheckboxField
+            label="Disabled"
+            name="disabled"
+            checked={formData.disabled}
+            onChange={handleChange}
+          />
+          <InputField
+            label="County"
+            name="county"
+            value={formData.county}
+            onChange={handleChange}
+          />
+          <InputField
+            label="Sub-County"
+            name="subCounty"
+            value={formData.subCounty}
+            onChange={handleChange}
+          />
+          <InputField
+            label="Constituency"
+            name="constituency"
+            value={formData.constituency}
+            onChange={handleChange}
+          />
+          <InputField
+            label="Ward"
+            name="ward"
+            value={formData.ward}
+            onChange={handleChange}
+          />
+          <InputField
+            label="Village"
+            name="village"
+            value={formData.village}
+            onChange={handleChange}
+          />
           <div className="flex justify-end space-x-4">
             <button
               type="button"
@@ -245,7 +322,7 @@ const UserProfile: React.FC = () => {
                   Saving...
                 </>
               ) : (
-                'Save'
+                "Save"
               )}
             </button>
           </div>
@@ -255,9 +332,11 @@ const UserProfile: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {Object.entries(user).map(([key, value]) => (
               <div key={key} className="bg-gray-50 p-4 rounded-md">
-                <p className="text-sm font-medium text-gray-500">{key.charAt(0).toUpperCase() + key.slice(1)}</p>
+                <p className="text-sm font-medium text-gray-500">
+                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                </p>
                 <p className="mt-1 text-lg font-semibold text-gray-900">
-                  {typeof value === 'boolean' ? (value ? 'Yes' : 'No') : value}
+                  {typeof value === "boolean" ? (value ? "Yes" : "No") : value}
                 </p>
               </div>
             ))}

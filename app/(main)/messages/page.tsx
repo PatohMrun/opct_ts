@@ -4,6 +4,8 @@ import { getUser } from "@/utils/auth";
 import { redirect } from "next/navigation";
 import { Loader2, Send } from "lucide-react";
 
+export const dynamic = "force-dynamic"
+
 interface Message {
   id: string;
   senderId: string;

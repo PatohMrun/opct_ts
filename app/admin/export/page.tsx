@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 
+export const dynamic = "force-dynamic";
+
 export type ApprovedPerson = {
   id: number;
   name: string;
@@ -162,6 +164,19 @@ const EligibleNotEligiblePage: React.FC = () => {
                 </table>
               </div>
               <div className="mt-4 text-right">
+                <button
+                  onClick={() => {
+                    setLoading(true);
+                    setTimeout(() => {
+                      alert("Funds disbursed successfully!");
+
+                      setLoading(false);
+                    }, 3000);
+                  }}
+                  className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-500 mr-4"
+                >
+                  Disburse Funds
+                </button>
                 <button
                   onClick={() =>
                     downloadData(approvedData, "approved_individuals")

@@ -198,6 +198,28 @@ const Navbar = () => {
             onClick={() => {
               setIsOpen(false);
             }}
+            href="/profile"
+            className={`hover:text-secondary ${
+              pathname === "/profile" ? "active" : ""
+            }`}
+          >
+            My Profile
+          </Link>
+          <Link
+            onClick={() => {
+              setIsOpen(false);
+            }}
+            href="/notifications"
+            className={`hover:text-secondary ${
+              pathname === "/notifications" ? "active" : ""
+            }`}
+          >
+            Notifications
+          </Link>
+          <Link
+            onClick={() => {
+              setIsOpen(false);
+            }}
             href="/about"
             className={`navlinks ${pathname === "/about" ? "active" : ""}`}
           >

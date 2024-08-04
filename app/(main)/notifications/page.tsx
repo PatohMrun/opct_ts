@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import { Loader2, Bell, AlertCircle, Check } from "lucide-react";
 import { getUser } from "@/utils/auth";
 
+export const dynamic = "force-dynamic"
+
 interface Notification {
   id: number;
   content: string;
