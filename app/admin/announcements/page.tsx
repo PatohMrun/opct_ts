@@ -215,13 +215,13 @@ const AnnouncementList: React.FC = () => {
               rows={4}
             />
             <div className="flex justify-end">
-              <button
+              <button type="button"
                 onClick={() => setIsModalOpen(false)}
                 className="bg-gray-500 text-white py-2 px-4 rounded mr-2"
               >
                 Cancel
               </button>
-              <button
+              <button type="button"
                 onClick={editingIndex !== null ? handleUpdate : handleAdd}
                 className="bg-blue-500 text-white py-2 px-4 rounded"
               >
