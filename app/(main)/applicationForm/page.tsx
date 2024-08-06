@@ -259,10 +259,10 @@ const ApplicationForm: React.FC = () => {
               id="personalFirstName"
               name="personalFirstName"
               value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-gray-900"
               placeholder="E.g., John"
               required
-              disabled
             />
           </div>
           <div>
@@ -277,9 +277,9 @@ const ApplicationForm: React.FC = () => {
               id="personalMiddleName"
               name="personalMiddleName"
               value={middleName}
+              onChange={(e) => setMiddleName(e.target.value)}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-gray-900"
               placeholder="E.g., Fred"
-              disabled
             />
           </div>
           <div>
@@ -294,10 +294,10 @@ const ApplicationForm: React.FC = () => {
               id="personalLastName"
               name="personalLastName"
               value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-gray-900"
               placeholder="E.g., Smith"
               required
-              disabled
             />
           </div>
           <div>
@@ -310,10 +310,10 @@ const ApplicationForm: React.FC = () => {
             <select
               name="personalGender"
               value={gender}
+              onChange={(e) => setGender(e.target.value)}
               id="personalGender"
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-gray-900"
               required
-              disabled
             >
               <option value="" disabled selected>
                 Select
@@ -331,9 +331,9 @@ const ApplicationForm: React.FC = () => {
               id="personalDob"
               name="personalDob"
               value={dob}
+              onChange={(e) => setDob(e.target.value)}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-gray-900"
               required
-              disabled
             />
           </div>
           <div>
@@ -348,10 +348,10 @@ const ApplicationForm: React.FC = () => {
               id="personalNationalID"
               name="personalNationalID"
               value={nationalId}
+              onChange={(e) => setNationalId(e.target.value)}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-gray-900"
               placeholder="E.g., 12345678"
               required
-              disabled
             />
           </div>
           <div>
@@ -366,9 +366,9 @@ const ApplicationForm: React.FC = () => {
               id="personalKraPin"
               name="personalKraPin"
               value={kra}
+              onChange={(e) => setKra(e.target.value)}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-gray-900"
               placeholder="E.g., A0123456XF"
-              disabled
             />
           </div>
           <div>
