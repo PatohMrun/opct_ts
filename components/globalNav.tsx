@@ -94,6 +94,22 @@ const Navbar = () => {
           Messages
         </Link>
         <Link
+          href="/profile"
+          className={`hover:text-secondary ${
+            pathname === "/profile" ? "active" : ""
+          }`}
+        >
+          My Profile
+        </Link>
+        <Link
+          href="/notifications"
+          className={`hover:text-secondary ${
+            pathname === "/notifications" ? "active" : ""
+          }`}
+        >
+          Notifications
+        </Link>
+        <Link
           href="/about"
           className={`hover:text-secondary ${
             pathname === "/about" ? "active" : ""
@@ -177,6 +193,28 @@ const Navbar = () => {
             className={`navlinks ${pathname === "/messages" ? "active" : ""}`}
           >
             Messages
+          </Link>
+          <Link
+            onClick={() => {
+              setIsOpen(false);
+            }}
+            href="/profile"
+            className={`hover:text-secondary ${
+              pathname === "/profile" ? "active" : ""
+            }`}
+          >
+            My Profile
+          </Link>
+          <Link
+            onClick={() => {
+              setIsOpen(false);
+            }}
+            href="/notifications"
+            className={`hover:text-secondary ${
+              pathname === "/notifications" ? "active" : ""
+            }`}
+          >
+            Notifications
           </Link>
           <Link
             onClick={() => {

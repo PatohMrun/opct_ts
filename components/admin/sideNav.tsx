@@ -7,7 +7,7 @@ import { AiOutlineDashboard, AiOutlineLogout } from "react-icons/ai";
 import { FiMenu } from "react-icons/fi";
 import { CiViewList } from "react-icons/ci";
 import { LuMessageSquare } from "react-icons/lu";
-import { Download } from "lucide-react";
+import { Coins, DollarSign, Download } from "lucide-react";
 import { logout } from "@/utils/auth";
 import nProgress from "nprogress";
 
@@ -22,9 +22,9 @@ const SideNav = () => {
     { icon: LuMessageSquare, name: "Messages", path: "/admin/messages" },
     // export
     {
-      name: "Export Data",
+      name: "Funds Disbursement",
       path: "/admin/export",
-      icon: Download,
+      icon: DollarSign,
     },
   ];
 

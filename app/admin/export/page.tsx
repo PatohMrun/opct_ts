@@ -2,12 +2,15 @@
 
 import React, { useEffect, useState } from "react";
 
+export const dynamic = "force-dynamic";
+
 export type ApprovedPerson = {
   id: number;
   name: string;
   nationalId: string;
   bankDetails: string;
   alternatePayerBankDetails: string;
+  phoneNumber: string;
 };
 
 export type NotApprovedPerson = {
@@ -83,7 +86,9 @@ const EligibleNotEligiblePage: React.FC = () => {
 
   return (
     <div className="p-8 max-w-5xl mx-auto">
-      <h1 className="text-2xl font-bold text-center mb-8">Export Data</h1>
+      <h1 className="text-2xl font-bold text-center mb-8">
+        Eligible and Not Eligible Individuals
+      </h1>
 
       {/* Tabs */}
       <div className="flex justify-center mb-8">
@@ -141,6 +146,7 @@ const EligibleNotEligiblePage: React.FC = () => {
                       <th className="py-3 px-4 border-b">
                         Alternate Payer Bank Details
                       </th>
+                      <th>Phone Number</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -156,12 +162,28 @@ const EligibleNotEligiblePage: React.FC = () => {
                         <td className="py-3 px-4 border-b">
                           {person.alternatePayerBankDetails}
                         </td>
+                        <td className="py-3 px-4 border-b">
+                          {person.phoneNumber}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
               <div className="mt-4 text-right">
+                <button
+                  onClick={() => {
+                    setLoading(true);
+                    setTimeout(() => {
+                      alert("Funds disbursed successfully!");
+
+                      setLoading(false);
+                    }, 3000);
+                  }}
+                  className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-500 mr-4"
+                >
+                  Disburse Funds
+                </button>
                 <button
                   onClick={() =>
                     downloadData(approvedData, "approved_individuals")

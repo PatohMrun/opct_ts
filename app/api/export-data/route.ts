@@ -86,6 +86,7 @@ export async function GET() {
     alternatePayerBankDetails: `${record.user?.bankDetails?.bankName ?? ""} ${
       record.user?.bankDetails?.accountNumber ?? ""
     }`,
+    phoneNumber: record.user?.phone ?? "",
   }));
 
   const rejectedPersons: NotApprovedPerson[] = rejectedRecords.map(

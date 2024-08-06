@@ -5,6 +5,8 @@ import React, { useEffect, useState } from "react";
 import { FiMessageSquare, FiMaximize2 } from "react-icons/fi";
 import { Loader2 } from "lucide-react";
 
+export const dynamic = "force-dynamic"
+
 interface Message {
   id: string;
   senderName: string;
